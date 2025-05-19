@@ -18,7 +18,7 @@ typedef struct s_cmd
 // parsing
 t_cmd   *parse_cmd(char *line);
 int     copy_command(t_cmd *cmd, char *line);
-int     copy_arguments(t_cmd *cmd, char *line);
+int	    copy_arguments(t_cmd *cmd, char *line, int cmd_end);
 
 // utils
 int     is_whitespace(char c);
