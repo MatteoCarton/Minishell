@@ -1,22 +1,27 @@
 #include "../inc/minishell.h"
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
-    (void)argc;
     (void)argv;
-    
     char *line;
     
+    if (argc != 1)
+        return (0);
+
+    setup_shell_signals();
     while (19)
     {
         line = readline("matteoshell$ ");
         if (!line) // si on CTRL+D (car ca renvoie NULL)
+        {
+            printf("exit\n");
             break ;
+        }
         if (*line) // si elle est pas vide
         {
             add_history(line);
         }
         free(line);
     }
-    return (0);
+    return (g_excode);
 }

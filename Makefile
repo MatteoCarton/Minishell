@@ -1,7 +1,7 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-SRCS = srcs/main.c
+SRCS = srcs/main.c srcs/signal/signal.c
 OBJS = $(SRCS:.c=.o)
 INCLUDES = -I./inc
 LIBS = -lreadline
