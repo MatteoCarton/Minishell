@@ -17,7 +17,7 @@ int main(int argc, char **argv, char **envp)
             printf("exit\n");
             break ;
         }
-        if (!line || check_line(line))
+        if (check_line(line))
             break;
         add_history(line);
         if (!start(line))
