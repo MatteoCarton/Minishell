@@ -1,11 +1,7 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-SRCS = srcs/main.c \
-       srcs/parsing/copy_args.c \
-       srcs/parsing/copy_cmd.c \
-       srcs/parsing/parse_cmd.c \
-       srcs/utils/utils.c
+SRCS = srcs/main.c
 OBJS = $(SRCS:.c=.o)
 INCLUDES = -I./inc
 LIBS = -lreadline
