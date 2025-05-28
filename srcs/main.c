@@ -17,10 +17,10 @@ int main(int argc, char **argv, char **envp)
             printf("exit\n");
             break ;
         }
-        if (*line) // si elle est pas vide
-        {
-            add_history(line);
-        }
+        if (!line || check_line(line))
+            break;
+        add_history(line);
+        if (!start(line))
         free(line);
     }
     return (g_excode);
