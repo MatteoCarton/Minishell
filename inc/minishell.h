@@ -7,6 +7,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include "libft/libft.h"
 
 extern int g_excode; // stock le code de sortie du shell 
 
@@ -27,6 +28,16 @@ typedef struct s_token
 	char			*str;
 	struct s_token	*next;
 }					t_token;
+
+
+typedef struct s_command
+{
+    char **args;           // Arguments de la commande
+    char *input_file;      // <
+    char *output_file;     // >
+    int append;            // >> (append)
+    struct s_command *next; // Pour les pipes (on pointera vers la cmd suivante)
+} t_command;
 
 // Signal handling
 void setup_shell_signals(void);
