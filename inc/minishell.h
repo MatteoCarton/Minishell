@@ -20,6 +20,7 @@ typedef enum s_token_type
 	IN,
 	OUT,
 	DOLLAR,
+    WORD,
 }					t_token_type;
 
 typedef struct s_token
