@@ -10,6 +10,8 @@ t_command *init_command(void)
     cmd->input_file = NULL;
     cmd->output_file = NULL;
     cmd->append = 0;
+    cmd->delimiter = NULL;
+    cmd->heredoc = NULL;
     cmd->next = NULL;
 
     return (cmd);
@@ -51,6 +53,35 @@ void add_argument(t_command *cmd, char *arg)
     cmd->args = new_args;
 }
 
+void free_command(t_command *cmd)
+{
+    int i;
+
+    if (!cmd)
+        return ;
+    if (cmd->args)
+    {
+        i = 0;
+        while (cmd->args[i])
+        {
+            free(cmd->args[i]);
+            i++;
+        }
+        free(cmd->args);
+    }
+    if (cmd->input_file)
+        free(cmd->input_file);
+    if (cmd->output_file)
+        free(cmd->output_file);
+    if (cmd->delimiter)
+        free(cmd->delimiter);
+    if (cmd->heredoc)
+        free(cmd->heredoc);
+    if (cmd->next)
+        free_command(cmd->next);
+    free(cmd);
+}
+
 void handle_argument(t_command *cmd, t_token *current)
 {
     add_argument(cmd, current->str);
@@ -75,38 +106,26 @@ int handle_redirection(t_command *cmd, t_token *current)
         if (!cmd->input_file)
             return (0);
     }
-    else
+    else if (current->type == OUT)
     {
         cmd->output_file = ft_strdup(current->str);
         if (!cmd->output_file)
             return (0);
     }
-    return (1);
-}
-
-void free_command(t_command *cmd)
-{
-    int i;
-
-    if (!cmd)
-        return ;
-    if (cmd->args)
+    else if (current->type == APPEND)
     {
-        i = 0;
-        while (cmd->args[i])
-        {
-            free(cmd->args[i]);
-            i++;
-        }
-        free(cmd->args);
+        cmd->append = 1;
+        cmd->output_file = ft_strdup(current->str);
+        if (!cmd->output_file)
+            return (0);
     }
-    if (cmd->input_file)
-        free(cmd->input_file);
-    if (cmd->output_file)
-        free(cmd->output_file);
-    if (cmd->next)
-        free_command(cmd->next);
-    free(cmd);
+    else if (current->type == HEREDOC)
+    {
+        cmd->delimiter = ft_strdup(current->str);
+        if (!cmd->delimiter)
+            return (0);
+    }
+    return (1);
 }
 
 t_command *parse_tokens(t_token *tokens)
@@ -128,7 +147,8 @@ t_command *parse_tokens(t_token *tokens)
                 return (NULL);
             }
         }
-        else if (current->type == IN || current->type == OUT)
+        else if (current->type == IN || current->type == OUT || 
+         current->type == APPEND || current->type == HEREDOC)
         {
             if (!handle_redirection(cmd, current))
             {

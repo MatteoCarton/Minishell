@@ -21,6 +21,8 @@ typedef enum s_token_type
 	OUT,
 	DOLLAR,
     WORD,
+    APPEND, // >>
+    HEREDOC, // <<
 }					t_token_type;
 
 typedef struct s_token
@@ -35,8 +37,10 @@ typedef struct s_command
 {
     char **args;           // Arguments de la commande
     char *input_file;      // <
-    char *output_file;     // >
-    int append;            // >> (append)
+    char *output_file;     // > ou >>
+    int append;            // flag pour >> (append) 0 : "ecrase le fichier" (>), 1 : "ajoute a la fin" (>>)
+    char *delimiter;       // Pour << (exemple EOF)
+    char *heredoc;         // le contenu qu'on ecrit
     struct s_command *next; // Pour les pipes (on pointera vers la cmd suivante)
 } t_command;
 
