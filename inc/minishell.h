@@ -7,7 +7,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include "libft/libft.h"
+# include "../libft/libft.h"
 
 extern int g_excode; // stock le code de sortie du shell 
 

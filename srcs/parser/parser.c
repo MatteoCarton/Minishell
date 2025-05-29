@@ -100,28 +100,33 @@ t_command *handle_pipe(t_command *cmd)
 
 int handle_redirection(t_command *cmd, t_token *current)
 {
+    t_token *next = current->next;
+    
+    if (!next || next->type != WORD)
+        return (0);
+        
     if (current->type == IN)  // Pour <
     {
-        cmd->input_file = ft_strdup(current->str); // on ecrit le nom du fichier
+        cmd->input_file = ft_strdup(next->str);
         if (!cmd->input_file)
             return (0);
     }
     else if (current->type == OUT)
     {
-        cmd->output_file = ft_strdup(current->str);
+        cmd->output_file = ft_strdup(next->str);
         if (!cmd->output_file)
             return (0);
     }
     else if (current->type == APPEND)
     {
         cmd->append = 1;
-        cmd->output_file = ft_strdup(current->str);
+        cmd->output_file = ft_strdup(next->str);
         if (!cmd->output_file)
             return (0);
     }
     else if (current->type == HEREDOC)
     {
-        cmd->delimiter = ft_strdup(current->str);
+        cmd->delimiter = ft_strdup(next->str);
         if (!cmd->delimiter)
             return (0);
     }
@@ -148,13 +153,14 @@ t_command *parse_tokens(t_token *tokens)
             }
         }
         else if (current->type == IN || current->type == OUT || 
-         current->type == APPEND || current->type == HEREDOC)
+                 current->type == APPEND || current->type == HEREDOC)
         {
             if (!handle_redirection(cmd, current))
             {
                 free_command(first_cmd);
                 return (NULL);
             }
+            current = current->next;
         }
         current = current->next;
     }
