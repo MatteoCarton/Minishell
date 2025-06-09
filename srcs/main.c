@@ -59,6 +59,8 @@ int start(char *line, t_shell *m)
             // TEST
             if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
                 execute_builtin(cmd, m);
+            if (ft_strncmp(cmd->args[0], "env", 4) == 0)
+                execute_builtin(cmd, m);
             // FIN TEST
             free_command(cmd);
         }

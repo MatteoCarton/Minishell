@@ -103,5 +103,6 @@ int execute_builtin(t_command *cmd, t_shell *shell);
 
 // BUILTINS
 void ft_pwd(void);
+void ft_env(char **envp);
 
 #endif

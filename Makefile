@@ -11,6 +11,7 @@ SRCS = \
 	srcs/parser/parser.c \
 	srcs/exec/exec.c \
 	srcs/exec/builtin/ft_pwd.c \
+	srcs/exec/builtin/ft_env.c \
 	srcs/signal/signal.c
 
 OBJS = $(SRCS:.c=.o)
