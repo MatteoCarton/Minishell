@@ -1,4 +1,5 @@
-.vscode
+.vscode/*
+.vscode/
 exemple
 a.out
 subject.txt
