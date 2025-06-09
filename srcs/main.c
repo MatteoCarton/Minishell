@@ -42,24 +42,27 @@ char **cpy_env(char **envp)
 int start(char *line, t_shell *m)
 {
     t_token *lexed;
+    t_command *cmd;
 
     if (!(*line))
-        return(1);
+        return (1);
     if (!check_quotes(line))
         return (0);
     expand_dollar(&line, *m);
     lexed = get_token(line);
-    if (lexed)// if pas d erreur
+    if (lexed) // si pas d'erreur
     {
-        //parsed = parser
-        //if (!parser) fail
-        //free et return (0);
-        //next cmd then return (1);
+        cmd = parse_tokens(lexed);
+        if (cmd)
+        {
+            // ici l'exec
+            free_command(cmd);
+        }
         free_token(&lexed);
         return (1);
     }
     else
-        return(0);
+        return (0);
 }
 
 

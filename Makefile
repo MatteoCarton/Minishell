@@ -1,24 +1,36 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-SRCS = srcs/main.c srcs/lexer/lexer.c srcs/lexer/lexer_utils.c srcs/expend/expander.c srcs/expend/expander_utils.c
+SRCS = \
+	srcs/main.c \
+	srcs/lexer/lexer.c \
+	srcs/lexer/lexer_utils.c \
+	srcs/expend/expander.c \
+	srcs/expend/expander_utils.c \
+	srcs/parser/parser.c
+
 OBJS = $(SRCS:.c=.o)
-INCLUDES = -I./inc
-LIBS = -lreadline
+INCLUDES = -I./inc -I./libft
+LIBS = -lreadline -Llibft -lft
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): libft/libft.a $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBS)
+
+libft/libft.a:
+	$(MAKE) -C libft
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
+	$(MAKE) -C libft clean
 
 fclean: clean
 	rm -f $(NAME)
+	$(MAKE) -C libft fclean
 
 re: fclean all
 

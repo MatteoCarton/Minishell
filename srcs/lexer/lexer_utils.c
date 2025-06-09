@@ -95,7 +95,7 @@ void    printoken(t_token *head)
 }
 
 /*dans la fonction handle quotes juste gerer les char*/
-int is_valid_mot(char c)
+int is_valid_word(char c)
 {
 	return (isalnum(c) || c == '"' || c == '\'' || strchr(EXTRA_CHAR, c));
 }
@@ -123,31 +123,3 @@ int    check_quotes(char *line)
 	else
         return (0);
 }
-
-char	*ft_substr(const char *s, unsigned int start, size_t len)
-{
-	size_t	i;
-	char	*str;
-
-	i = 0;
-	if (!s)
-		return (NULL);
-	while (s[i])
-		i++;
-	if (i < start)
-		return (strdup(""));
-	if (len > i - start)
-		len = i - start;
-	str = calloc((len + 1), sizeof(char));
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		str[i] = s[start + i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-

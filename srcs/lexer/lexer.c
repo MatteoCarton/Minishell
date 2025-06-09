@@ -75,25 +75,25 @@ void    quotes_token(char *str, t_token **head, t_token **actual, int *i)
             buff[j++] = str[(*i)++];
     }
     buff[j] = '\0';
-    new = create_token(MOT, buff);
+    new = create_token(WORD, buff);
     add_token(head, actual, new);
 }
-/*le reste on check si c est des char valide puis on extrait et on met dans mot
+/*le reste on check si c est des char valide puis on extrait et on met dans word
 ensuite on cree le token et on l ajoute a la liste puis free car substr*/
 void    other_token(char *str, t_token **head, t_token **actual, int *i)
 {
     t_token *new;
     int begun;
-    char *mot;
+    char *word;
 
     begun = *i;
-    while (str[*i] && is_valid_mot(str[*i]))
+    while (str[*i] && is_valid_word(str[*i]))
         (*i)++;
-    if(!(mot = ft_substr(str, begun, *i - begun)))
+    if(!(word = ft_substr(str, begun, *i - begun)))
         return;
-    new = create_token(MOT, mot);
+    new = create_token(WORD, word);
     add_token(head, actual, new);
-    free(mot);
+    free(word);
 }
 
 void    check_token(char *line,t_token **head, t_token **actual, int *i)
@@ -114,7 +114,7 @@ void    check_token(char *line,t_token **head, t_token **actual, int *i)
 }
 /*init une tete de list et le pos actuel ensuite on parcour toute la ligne
 skip les espace on cree des token pour chaque char check si c est un pipe, redirection
-guillemet et le reste sera mot*/
+guillemet et le reste sera word*/
 t_token *get_token(char *line)
 {
     int i;

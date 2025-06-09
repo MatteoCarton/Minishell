@@ -7,6 +7,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include "../libft/libft.h"
 
 extern int g_excode; // stock le code de sortie du shell 
 
@@ -14,18 +15,19 @@ extern int g_excode; // stock le code de sortie du shell
 # define EXTRA_CHAR "!#$%&()*+,-./:;=?@[\\]^_`{|}~"
 #endif
 
+
 typedef enum s_token_type
 {
 	END_TOKEN,
 	SINGLE_QUOTE,
 	DOUBLE_QUOTE,
-	MOT,
 	PIPE,
 	IN,
 	OUT,
-	HEREDOC,
-	APPEND,
-	DOLLAR,
+    WORD,
+    APPEND, // >>
+    HEREDOC, // <<
+    DOLLAR,
 }					t_token_type;
 
 typedef struct s_token
@@ -41,6 +43,16 @@ typedef struct s_shell
 	int exit;
 }	t_shell;
 
+typedef struct s_command
+{
+    char **args;           // Arguments de la commande
+    char *input_file;      // <
+    char *output_file;     // > ou >>
+    int append;            // flag pour >> (append) 0 : "ecrase le fichier" (>), 1 : "ajoute a la fin" (>>)
+    char *delimiter;       // Pour << (exemple EOF)
+    char *heredoc;         // le contenu qu'on ecrit
+    struct s_command *next; // Pour les pipes (on pointera vers la cmd suivante)
+} t_command;
 
 // Signal handling
 void setup_shell_signals(void);
@@ -59,7 +71,7 @@ void    quotes_token(char *str, t_token **head, t_token **actual, int *i);
 void    in_out_token(char *str, t_token **head, t_token **actual, int *i);
 void    pipe_token(char *line,t_token **head, t_token **actual, int *i);
 int    check_quotes(char *line);
-int is_valid_mot(char c);
+int is_valid_word(char c);
 void    printoken(t_token *head);
 void add_token(t_token **head, t_token **actual, t_token *new);
 t_token *create_token (t_token_type type, char *str);
@@ -80,5 +92,8 @@ char	*join_str(char *s1, char *s2);
 char	*ft_itoa(int n);
 
 
+
+t_command *parse_tokens(t_token *tokens);
+void free_command(t_command *cmd);
 
 #endif
