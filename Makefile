@@ -1,13 +1,17 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
+
 SRCS = \
 	srcs/main.c \
 	srcs/lexer/lexer.c \
 	srcs/lexer/lexer_utils.c \
 	srcs/expend/expander.c \
 	srcs/expend/expander_utils.c \
-	srcs/parser/parser.c
+	srcs/parser/parser.c \
+	srcs/exec/exec.c \
+	srcs/exec/builtin/ft_pwd.c \
+	srcs/signal/signal.c
 
 OBJS = $(SRCS:.c=.o)
 INCLUDES = -I./inc -I./libft

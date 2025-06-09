@@ -25,7 +25,7 @@ static void handle_sigint_child(int signal)
 void setup_shell_signals(void)
 {
     signal(SIGINT, handle_sigint);    // Ctrl+C
-    signal(SIGQUIT, SIG_IGN);         // Ctrl+\ 
+    signal(SIGQUIT, SIG_IGN);         // Ctrl+ backslash 
     signal(SIGTSTP, SIG_IGN);         // Ctrl+Z
 }
 

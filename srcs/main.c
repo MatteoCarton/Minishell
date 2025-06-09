@@ -56,6 +56,10 @@ int start(char *line, t_shell *m)
         if (cmd)
         {
             // ici l'exec
+            // TEST
+            if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
+                execute_builtin(cmd, m);
+            // FIN TEST
             free_command(cmd);
         }
         free_token(&lexed);

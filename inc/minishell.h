@@ -102,6 +102,6 @@ void free_command(t_command *cmd);
 int execute_builtin(t_command *cmd, t_shell *shell);
 
 // BUILTINS
-int ft_pwd(void);
+void ft_pwd(void);
 
 #endif
