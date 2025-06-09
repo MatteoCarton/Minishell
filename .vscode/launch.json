@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/matteocarton/Ecole19/Minishell/srcs",
-      "program": "/Users/matteocarton/Ecole19/Minishell/srcs/build/Debug/outDebug"
+      "cwd": "/Users/matteocarton/Ecole19/Minishell/srcs/parser",
+      "program": "/Users/matteocarton/Ecole19/Minishell/srcs/parser/build/Debug/outDebug"
     }
   ]
 }

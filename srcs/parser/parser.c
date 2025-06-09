@@ -19,7 +19,7 @@ t_command *init_command(void)
 
 void add_argument(t_command *cmd, char *arg)
 {
-    size_t i;
+    int i;
     char **new_args;
 
     i = 0;
