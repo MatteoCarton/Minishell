@@ -8,6 +8,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include "../libft/libft.h"
+#include <limits.h>
 
 extern int g_excode; // stock le code de sortie du shell 
 
@@ -95,5 +96,12 @@ char	*ft_itoa(int n);
 
 t_command *parse_tokens(t_token *tokens);
 void free_command(t_command *cmd);
+
+
+// EXEC
+int execute_builtin(t_command *cmd, t_shell *shell);
+
+// BUILTINS
+int ft_pwd(void);
 
 #endif

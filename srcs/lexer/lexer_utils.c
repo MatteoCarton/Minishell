@@ -60,7 +60,7 @@ t_token *create_token (t_token_type type, char *str)
     new = malloc(sizeof(t_token));
     if (!new)
         return (NULL);
-    new->str = strdup(str);
+    new->str = ft_strdup(str);
     if(!new->str)
         return (free(new), NULL);
     new->type = type;
@@ -97,7 +97,7 @@ void    printoken(t_token *head)
 /*dans la fonction handle quotes juste gerer les char*/
 int is_valid_word(char c)
 {
-	return (isalnum(c) || c == '"' || c == '\'' || strchr(EXTRA_CHAR, c));
+	return (ft_isalnum(c) || c == '"' || c == '\'' || ft_strchr(EXTRA_CHAR, c));
 }
 
 int    check_quotes(char *line)
