@@ -61,6 +61,9 @@ int start(char *line, t_shell *m)
                 execute_builtin(cmd, m);
             if (ft_strncmp(cmd->args[0], "env", 4) == 0)
                 execute_builtin(cmd, m);
+            if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
+                execute_builtin(cmd, m);
+                
             // FIN TEST
             free_command(cmd);
         }

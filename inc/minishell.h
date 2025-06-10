@@ -9,6 +9,7 @@
 # include <unistd.h>
 # include "../libft/libft.h"
 #include <limits.h>
+#include <stdbool.h>
 
 extern int g_excode; // stock le code de sortie du shell 
 
@@ -104,5 +105,6 @@ int execute_builtin(t_command *cmd, t_shell *shell);
 // BUILTINS
 void ft_pwd(void);
 void ft_env(char **envp);
+void ft_echo(char **args);
 
 #endif

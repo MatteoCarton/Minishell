@@ -12,6 +12,7 @@ SRCS = \
 	srcs/exec/exec.c \
 	srcs/exec/builtin/ft_pwd.c \
 	srcs/exec/builtin/ft_env.c \
+	srcs/exec/builtin/ft_echo.c \
 	srcs/signal/signal.c
 
 OBJS = $(SRCS:.c=.o)
