@@ -11,8 +11,6 @@
 #include <limits.h>
 #include <stdbool.h>
 
-extern int g_excode; // stock le code de sortie du shell 
-
 #ifndef EXTRA_CHAR
 # define EXTRA_CHAR "!#$%&()*+,-./:;=?@[\\]^_`{|}~"
 #endif
@@ -106,5 +104,9 @@ int execute_builtin(t_command *cmd, t_shell *shell);
 void ft_pwd(void);
 void ft_env(char **envp);
 void ft_echo(char **args);
+void ft_exit(char **args, t_shell *shell);
+
+// Builtin utils
+bool	handle_sign(const char *str, int *i);
 
 #endif

@@ -4,8 +4,8 @@ int execute_builtin(t_command *cmd, t_shell *shell)
 {
     (void)shell; // A SUPPRIMER
     
-    /* if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-        return (ft_exit()); */
+    if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
+        return (ft_exit(cmd->args, shell), -1);
     if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
         return (ft_echo(cmd->args), 1); 
     if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)

@@ -18,9 +18,11 @@ static bool  is_n(char *arg)
 
 void ft_echo(char **args)
 {
-    int i = 1;
-    int n_or_not = false;
+    int i;
+    int n_or_not;
 
+    i = 1;
+    n_or_not = false;
     while (args[i] && is_n(args[i]))
     {
         n_or_not = true;
