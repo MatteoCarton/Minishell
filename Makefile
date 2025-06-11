@@ -14,6 +14,7 @@ SRCS = \
 	srcs/exec/builtin/ft_env.c \
 	srcs/exec/builtin/ft_echo.c \
 	srcs/exec/builtin/ft_exit.c \
+	srcs/exec/builtin/ft_cd.c \
 	srcs/exec/builtin/builtin_utils.c \
 	srcs/signal/signal.c
 

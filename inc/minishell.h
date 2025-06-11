@@ -105,8 +105,12 @@ void ft_pwd(void);
 void ft_env(char **envp);
 void ft_echo(char **args);
 void ft_exit(char **args, t_shell *shell);
+void ft_cd(char **args, t_shell *shell);
+char	*update_old_pwd_env(char **env);
+int	update_new_pwd_env(char **env, const char *old_pwd, const char *path);
 
 // Builtin utils
-bool	handle_sign(const char *str, int *i);
+int	number_of_args(char **args);
+char	*ft_strcpy(char *dest, const char *src);
 
 #endif
