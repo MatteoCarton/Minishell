@@ -1,8 +1,8 @@
 #include "../../../inc/minishell.h"
 
-static void update_env_var(char **env, const char *name, const char *value)
+static void	update_env_var(char **env, const char *name, const char *value)
 {
-    size_t	i;
+	size_t	i;
 	size_t	len;
 	char	*new_var;
 
@@ -38,25 +38,25 @@ char	*update_old_pwd_env(char **env)
 		if (ft_strncmp(env[i], "PWD=", 4) == 0)
 		{
 			old_pwd = env[i] + 4;
-			break;
+			break ;
 		}
 		i++;
 	}
 	if (old_pwd)
 		update_env_var(env, "OLDPWD", old_pwd);
-    return (old_pwd);
+	return (old_pwd);
 }
 
 int	update_new_pwd_env(char **env, const char *old_pwd, const char *path)
 {
-	char	*new_pwd;
-    size_t  total_len;
+	char *new_pwd;
+	size_t total_len;
 
 	if (path[0] == '/')
 		new_pwd = ft_strdup(path);
 	else if (old_pwd)
 	{
-        total_len = ft_strlen(old_pwd) + 1 + ft_strlen(path) + 1;
+		total_len = ft_strlen(old_pwd) + 1 + ft_strlen(path) + 1;
 		new_pwd = malloc(total_len);
 		if (!new_pwd)
 			return (1);

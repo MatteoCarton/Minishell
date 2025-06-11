@@ -11,7 +11,11 @@ static void	change_directory(char *arg1, t_shell *shell)
 		shell->exit = 1;
 		return ;
 	}
-    update_new_pwd_env(shell->env, old_pwd, arg1);
+    if (update_new_pwd_env(shell->env, old_pwd, arg1) == 1)
+	{
+		shell->exit = 1;
+		return ;
+	}
 	shell->exit = 0;
 }
 
@@ -24,7 +28,7 @@ void	ft_cd(char **args, t_shell *shell)
 		shell->exit = 1;
 		return ;
 	}
-	if (!args[1] || ft_strcmp(args[1], "~") == 0)
+	if (!args[1] || ft_strncmp(args[1], "~", 2) == 0)
 	{
 		home_path = getenv("HOME");
 		if (!home_path)
