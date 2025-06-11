@@ -1,4 +1,3 @@
-# ================== COLORS ===================
 GREEN = \033[32m
 CYAN = \033[36m
 YELLOW = \033[33m
@@ -6,12 +5,10 @@ RESET = \033[0m
 BLUE = \033[34m
 RED = \033[31m
 
-# ================ COMPILATION ================
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 INCLUDES = -I./inc -I./libft
 
-# ================== SOURCES ===================
 SRC_PATH = ./srcs
 OBJ_PATH = ./tmp
 
@@ -32,11 +29,9 @@ SRCS = \
 
 OBJS = $(SRCS:$(SRC_PATH)/%.c=$(OBJ_PATH)/%.o)
 
-# =============== EXECUTABLE & LIBS ===============
 NAME = minishell
 LIBS = -lreadline -Llibft -lft
 
-# =================== RULES =====================
 all: msg $(NAME)
 
 msg:
