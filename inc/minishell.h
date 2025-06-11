@@ -105,8 +105,15 @@ void ft_pwd(void);
 void ft_env(char **envp);
 void ft_echo(char **args);
 void ft_exit(char **args, t_shell *shell);
+void    export_env(char **arg, char ***env, char *var_str, int *exit);
 
 // Builtin utils
 bool	handle_sign(const char *str, int *i);
+int     check_line(char ***env, char *str);
+char    *get_key(char *str);
+int     equal_pos(char *str);
+void    show_env(char **env);
+char    *get_quoted(char *env);
+
 
 #endif

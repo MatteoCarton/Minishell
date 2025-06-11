@@ -65,6 +65,8 @@ int start(char *line, t_shell *m)
                 execute_builtin(cmd, m);
             if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
                 execute_builtin(cmd, m);
+            if (ft_strncmp(cmd->args[0], "export", 7) == 0)
+                execute_builtin(cmd, m);
                 
             // FIN TEST
             free_command(cmd);

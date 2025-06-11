@@ -125,6 +125,6 @@ t_token *get_token(char *line)
     head = NULL;
     actual = NULL;
     check_token(line, &head, &actual, &i);
-    printoken(head);
+    //printoken(head);
     return(head);
 }
