@@ -1,6 +1,6 @@
 #include "../../../inc/minishell.h"
 
-void    remove_line(char ***env, int unset)
+void    remove_line(char ***env, int unset)//cree nouveau tableau on copie tout sauf unset puis on remplace
 {
     int i;
     int j;
@@ -29,7 +29,7 @@ void    remove_line(char ***env, int unset)
     *env = new;
 }
 
-int     get_line_unset(char **env, char *unset)
+int     get_line_unset(char **env, char *unset)//cherche l index a unset
 {
     int i;
     int j;
