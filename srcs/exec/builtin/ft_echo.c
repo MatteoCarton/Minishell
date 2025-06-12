@@ -40,3 +40,5 @@ void ft_echo(char **args)
     if (n_or_not == false)
         printf("\n");
 }
+
+// A AJOUTER ECHO le $

@@ -24,6 +24,8 @@ SRCS = \
 	$(SRC_PATH)/exec/builtin/ft_env.c \
 	$(SRC_PATH)/exec/builtin/ft_echo.c \
 	$(SRC_PATH)/exec/builtin/ft_exit.c \
+	$(SRC_PATH)/exec/builtin/ft_cd.c \
+	$(SRC_PATH)/exec/builtin/ft_cd2.c \
 	$(SRC_PATH)/exec/builtin/ft_export.c \
 	$(SRC_PATH)/exec/builtin/ft_export_utils.c \
 	$(SRC_PATH)/exec/builtin/ft_unset.c \

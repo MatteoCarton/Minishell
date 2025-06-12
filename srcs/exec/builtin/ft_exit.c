@@ -1,14 +1,18 @@
 #include "../../../inc/minishell.h"
 #include <limits.h>
 
-static int	number_of_args(char **args)
+static bool	handle_sign(const char *str, int *i)
 {
-	int	i;
+	bool	plus_sign;
 
-	i = 0;
-	while (args[i])
-		i++;
-	return (i);
+	plus_sign = true;
+	if (str[*i] == '+' || str[*i] == '-')
+	{
+		if (str[*i] == '-')
+			plus_sign = false;
+		(*i)++;
+	}
+	return (plus_sign);
 }
 
 static bool	is_numeric(char *arg)

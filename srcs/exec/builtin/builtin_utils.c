@@ -1,16 +1,25 @@
 #include "../../../inc/minishell.h"
 
-bool	handle_sign(const char *str, int *i)
+int	number_of_args(char **args)
 {
-	bool	plus_sign;
+	int	i;
 
-	plus_sign = true;
-	if (str[*i] == '+' || str[*i] == '-')
-	{
-		if (str[*i] == '-')
-			plus_sign = false;
-		(*i)++;
-	}
-	return (plus_sign);
+	i = 0;
+	while (args[i])
+		i++;
+	return (i);
 }
 
+char	*ft_strcpy(char *dest, const char *src)
+{
+	int i;
+
+	i = 0;
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}

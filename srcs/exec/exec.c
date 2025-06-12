@@ -10,8 +10,8 @@ int execute_builtin(t_command *cmd, t_shell *shell)
         return (ft_echo(cmd->args), 1); 
     if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
         return (ft_pwd(), 1);
-    /* if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
-        return (ft_cd());  */
+    if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
+        return (ft_cd(cmd->args, shell), 1);
     if (ft_strncmp(cmd->args[0], "env", 4) == 0)
         return (ft_env(shell->env), 1);
     if (ft_strncmp(cmd->args[0], "unset", 5) == 0)
