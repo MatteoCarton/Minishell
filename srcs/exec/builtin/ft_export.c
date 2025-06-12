@@ -26,25 +26,16 @@ void    add_env_var(char ***env, char *str)
     *env = new;
 }
 
-int valid_env(char *str)//check pas trop de = et les char
+int valid_env(char *str)
 {
-    int i;
-    int equal;
+    int i = 0;
 
-    i = 0;
-    equal = 0;
-    if (!(ft_isalpha(str[0]) || str[0] == '_'))
+    if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
         return (0);
-    while(str[i])
+
+    while (str[i] && str[i] != '=')
     {
-        if (str[i] == '=')
-        {
-            equal++;
-            if (equal > 1)
-                return (0);
-        }
-        else if (!(ft_isalnum(str[i]) 
-            || ft_strchr(EXTRA_CHAR, str[i]) == 0))
+        if (!ft_isalnum(str[i]) && str[i] != '_')
             return (0);
         i++;
     }
