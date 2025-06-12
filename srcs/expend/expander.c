@@ -1,5 +1,23 @@
 #include "../inc/minishell.h"
 
+static char	*find_env_value(char **env, char *var)
+{
+	int		i;
+	int		len;
+
+	if (!env || !var)
+		return (NULL);
+	len = ft_strlen(var);
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], var, len) == 0 && env[i][len] == '=')
+			return (env[i] + len + 1);
+		i++;
+	}
+	return (NULL);
+}
+
 char *get_var_name(char *str)
 {
     int i = 1;
@@ -48,7 +66,7 @@ void replace_dollar(char **str, char **new_str, t_shell g_env, int *i)
         var_name = get_var_name(&(*str)[*i]);
         if (var_name)
         {
-            env_value = getenv(var_name);
+            env_value = find_env_value(g_env.env, var_name);
             if (!env_value)
                 to_add = strdup("");
             else
