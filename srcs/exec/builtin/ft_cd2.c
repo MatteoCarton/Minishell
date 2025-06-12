@@ -15,9 +15,9 @@ static void	update_env_var(char **env, const char *name, const char *value)
 			new_var = malloc(len + 1 + ft_strlen(value) + 1);
 			if (!new_var)
 				return ;
-			ft_strcpy(new_var, name);
+			ft_strlcpy(new_var, name, len + 1);
 			new_var[len] = '=';
-			ft_strcpy(new_var + len + 1, value);
+			ft_strlcpy(new_var + len + 1, value, ft_strlen(value) + 1);
 			free(env[i]);
 			env[i] = new_var;
 			return ;
@@ -60,7 +60,7 @@ int	update_new_pwd_env(char **env, const char *old_pwd, const char *path)
 		new_pwd = malloc(total_len);
 		if (!new_pwd)
 			return (1);
-		ft_strcpy(new_pwd, old_pwd);
+		ft_strlcpy(new_pwd, old_pwd, total_len);
 		ft_strlcat(new_pwd, "/", total_len);
 		ft_strlcat(new_pwd, path, total_len);
 	}
