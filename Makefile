@@ -26,6 +26,7 @@ SRCS = \
 	$(SRC_PATH)/exec/builtin/ft_exit.c \
 	$(SRC_PATH)/exec/builtin/ft_export.c \
 	$(SRC_PATH)/exec/builtin/ft_export_utils.c \
+	$(SRC_PATH)/exec/builtin/ft_unset.c \
 	$(SRC_PATH)/exec/builtin/builtin_utils.c \
 	$(SRC_PATH)/signal/signal.c
 
