@@ -11,6 +11,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 #include <sys/wait.h>
+#include <fcntl.h>
+#include <stdbool.h>
 
 # ifndef EXTRA_CHAR
 #  define EXTRA_CHAR "!#$%&()*+,-./:;=?@[\\]^_`{|}~"
@@ -43,14 +45,17 @@ typedef struct s_shell
 	int				exit;
 }					t_shell;
 
+typedef struct s_redirection
+{
+	t_token_type	type;      // IN, OUT, APPEND, HEREDOC
+	char			*filename;
+	struct s_redirection	*next;
+}	t_redirection;
+
 typedef struct s_command
 {
 	char **args;       // Arguments de la commande
-	char *input_file;  // <
-	char *output_file; // > ou >>
-	int				append; // flag pour >> (append) 0 : "ecrase le fichier" (>), 1 : "ajoute a la fin" (>>)
-	char *delimiter;        // Pour << (exemple EOF)
-	char *heredoc;          // le contenu qu'on ecrit
+	t_redirection *redirection; // Liste chainee de toutes les redirections dans l'ordre
 	struct s_command *next; // Pour les pipes (on pointera vers la cmd suivante)
 }					t_command;
 
@@ -104,6 +109,8 @@ void				free_command(t_command *cmd);
 int					execute_builtin(t_command *cmd, t_shell *shell);
 int					exec(t_command *cmd, t_shell *shell);
 char *find_command_path(char *cmd, char **env);
+void	print_error_exit(const char *dir, const char *msg);
+int	exec_redirections(t_command *cmd);
 
 // BUILTINS
 void				ft_pwd(void);

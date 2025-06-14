@@ -73,11 +73,34 @@ int	exec(t_command *cmd, t_shell *shell)
 	pid_t pid;
 	char *path;
 	int status;
+    int result;
+	int saved_stdout;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
+
 	if (is_builtin(cmd->args[0]))
-		return (execute_builtin(cmd, shell));
+	{
+		if (cmd->output_file)
+			saved_stdout = dup(STDOUT_FILENO);
+		if (!exec_redirections(cmd))
+		{
+			if (saved_stdout != -1)
+			{
+				dup2(saved_stdout, STDOUT_FILENO);
+				close(saved_stdout);
+			}
+			return (1);
+		}
+		result = execute_builtin(cmd, shell);
+		if (saved_stdout != -1)
+		{
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdout);
+		}
+		return (result);
+	}
+
 	path = get_exec_path(cmd->args[0], shell->env, shell);
 	if (!path)
 		return (127);
@@ -90,12 +113,15 @@ int	exec(t_command *cmd, t_shell *shell)
 		return (1);
 	}
 	if (pid == 0)
+	{
+		exec_redirections(cmd);
 		exec_child_process(path, cmd, shell);
+	}
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		shell->exit = WEXITSTATUS(status);
 	else
-		shell->exit = 1; // changer le signal
+		shell->exit = 1;
 	free(path);
 	return (shell->exit);
 }

@@ -104,15 +104,19 @@ int handle_redirection(t_command *cmd, t_token *current)
     
     if (!next || next->type != WORD)
         return (0);
-        
+    // seule la dernière redirection du meme type est prise en compte (ex : ls < test < salut), il faut que prendre salut
     if (current->type == IN)  // Pour <
     {
+        if (cmd->input_file)
+            free(cmd->input_file); // libere l'ancienne valeur pour éviter un leak (si y'avais deja qqc ex : ls < test < salut), 
         cmd->input_file = ft_strdup(next->str);
         if (!cmd->input_file)
             return (0);
     }
     else if (current->type == OUT)
     {
+        if (cmd->output_file)
+            free(cmd->output_file);
         cmd->output_file = ft_strdup(next->str);
         if (!cmd->output_file)
             return (0);
@@ -120,12 +124,16 @@ int handle_redirection(t_command *cmd, t_token *current)
     else if (current->type == APPEND)
     {
         cmd->append = 1;
+        if (cmd->output_file)
+            free(cmd->output_file);
         cmd->output_file = ft_strdup(next->str);
         if (!cmd->output_file)
             return (0);
     }
     else if (current->type == HEREDOC)
     {
+        if (cmd->delimiter)
+            free(cmd->delimiter);
         cmd->delimiter = ft_strdup(next->str);
         if (!cmd->delimiter)
             return (0);
