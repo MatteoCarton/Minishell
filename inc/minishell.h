@@ -10,6 +10,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+#include <sys/wait.h>
 
 # ifndef EXTRA_CHAR
 #  define EXTRA_CHAR "!#$%&()*+,-./:;=?@[\\]^_`{|}~"
@@ -44,11 +45,10 @@ typedef struct s_shell
 
 typedef struct s_command
 {
-	char **args;            // Arguments de la commande
-	char *input_file;       // <
-	char *output_file;      // > ou >>
-	int append;            
-		// flag pour >> (append) 0 : "ecrase le fichier" (>), 1 : "ajoute a la fin" (>>)
+	char **args;       // Arguments de la commande
+	char *input_file;  // <
+	char *output_file; // > ou >>
+	int				append; // flag pour >> (append) 0 : "ecrase le fichier" (>), 1 : "ajoute a la fin" (>>)
 	char *delimiter;        // Pour << (exemple EOF)
 	char *heredoc;          // le contenu qu'on ecrit
 	struct s_command *next; // Pour les pipes (on pointera vers la cmd suivante)
@@ -102,6 +102,8 @@ void				free_command(t_command *cmd);
 
 // EXEC
 int					execute_builtin(t_command *cmd, t_shell *shell);
+int					exec(t_command *cmd, t_shell *shell);
+char *find_command_path(char *cmd, char **env);
 
 // BUILTINS
 void				ft_pwd(void);
@@ -116,12 +118,14 @@ void				export_env(char **arg, char ***env, char *var_str,
 						int *exit);
 void				unset_env(char **arg, char ***env, char *var_str,
 						int *exit);
+char	*find_env_value(char **env, char *var);
+
 // Builtin utils
 int					check_line(char ***env, char *str);
 char				*get_key(char *str);
 int					equal_pos(char *str);
 void				show_env(char **env);
 char				*get_quoted(char *env);
-int	number_of_args(char **args);
+int					number_of_args(char **args);
 
 #endif

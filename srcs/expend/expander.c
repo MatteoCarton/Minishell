@@ -1,6 +1,6 @@
 #include "../inc/minishell.h"
 
-static char	*find_env_value(char **env, char *var)
+char	*find_env_value(char **env, char *var)
 {
 	int		i;
 	int		len;
