@@ -20,6 +20,7 @@ SRCS = \
 	$(SRC_PATH)/expend/expander_utils.c \
 	$(SRC_PATH)/parser/parser.c \
 	$(SRC_PATH)/exec/exec.c \
+	$(SRC_PATH)/exec/find_path.c \
 	$(SRC_PATH)/exec/builtin/ft_pwd.c \
 	$(SRC_PATH)/exec/builtin/ft_env.c \
 	$(SRC_PATH)/exec/builtin/ft_echo.c \
