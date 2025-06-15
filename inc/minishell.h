@@ -119,7 +119,8 @@ void				export_env(char **arg, char ***env, char *var_str,
 void				unset_env(char **arg, char ***env, char *var_str,
 						int *exit);
 char	*find_env_value(char **env, char *var);
-
+int	is_builtin(char *arg);
+char	*get_exec_path(char *cmd, char **env, t_shell *shell);
 // Builtin utils
 int					check_line(char ***env, char *str);
 char				*get_key(char *str);
@@ -127,5 +128,9 @@ int					equal_pos(char *str);
 void				show_env(char **env);
 char				*get_quoted(char *env);
 int					number_of_args(char **args);
+
+//pipe
+int has_pipe(t_command *cmd);
+int exec_pipe(t_command *cmd, t_shell *shell);
 
 #endif

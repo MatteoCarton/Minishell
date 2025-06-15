@@ -2,6 +2,13 @@
 
 /* si execve reussit, il remplace tout le code par la fonction choisis, donc perror etc ne seront
 jamais execute (sauf si ca fail) */
+int has_pipe(t_command *cmd)
+{
+    if (!cmd)
+        return (0);
+    return (cmd && cmd->next != NULL);
+}
+
 static void	exec_child_process(char *path, t_command *cmd, t_shell *shell)
 {
 	execve(path, cmd->args, shell->env);
@@ -9,7 +16,7 @@ static void	exec_child_process(char *path, t_command *cmd, t_shell *shell)
 	exit(127);
 }
 
-static char	*get_exec_path(char *cmd, char **env, t_shell *shell)
+char	*get_exec_path(char *cmd, char **env, t_shell *shell)
 {
 	char	*path;
 
@@ -25,7 +32,7 @@ static char	*get_exec_path(char *cmd, char **env, t_shell *shell)
 	return (path);
 }
 
-static int	is_builtin(char *arg)
+int	is_builtin(char *arg)
 {
 	if (!arg)
 		return (0);
@@ -76,6 +83,11 @@ int	exec(t_command *cmd, t_shell *shell)
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
+	if (has_pipe(cmd))
+    {
+		shell->exit = exec_pipe(cmd, shell);
+		return (shell->exit);
+	}
 	if (is_builtin(cmd->args[0]))
 		return (execute_builtin(cmd, shell));
 	path = get_exec_path(cmd->args[0], shell->env, shell);
