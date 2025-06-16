@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/16 18:00:00 by minishell42       #+#    #+#             */
+/*   Updated: 2025/06/16 18:48:36 by mcarton          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minishell.h"
 
 /*pipe token on cree et on ajt a la liste*/
@@ -96,21 +108,19 @@ void    other_token(char *str, t_token **head, t_token **actual, int *i)
     free(word);
 }
 
-void    check_token(char *line,t_token **head, t_token **actual, int *i)
+void    check_token(char *line, t_token **head, t_token **actual, int *i)
 {
-    while (line[*i])
-    {
-        if ((line[*i] >= 9 && line[*i] <= 13) || line[*i] == 32)
-            (*i)++;
-        else if (line[*i] == '|')
-            pipe_token(line, head, actual, i);
-        else if (line[*i] == '>' || line[*i] == '<')
-            in_out_token(line, head, actual, i);
-        else if (line[*i] == '"' || line[*i] == '\'')
-            quotes_token(line, head, actual, i);
-        else
-            other_token(line, head, actual, i);
-    }
+	while (line[*i])
+	{
+		if ((line[*i] >= 9 && line[*i] <= 13) || line[*i] == 32)
+			(*i)++;
+		else if (line[*i] == '|')
+			pipe_token(line, head, actual, i);
+		else if (line[*i] == '>' || line[*i] == '<')
+			in_out_token(line, head, actual, i);
+		else
+			word_token(line, head, actual, i);
+	}
 }
 /*init une tete de list et le pos actuel ensuite on parcour toute la ligne
 skip les espace on cree des token pour chaque char check si c est un pipe, redirection

@@ -90,6 +90,7 @@ char				*ft_substr(const char *s, unsigned int start, size_t len);
 void				free_token(t_token **head);
 void				free_env(char **env);
 void				clean_token(t_token *token);
+void word_token(char *str, t_token **head, t_token **actual, int *i);
 
 // EXPAND $
 

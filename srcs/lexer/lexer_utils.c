@@ -123,3 +123,33 @@ int    check_quotes(char *line)
 	else
         return (0);
 }
+
+// fonction qui fusionne les morceaux entre quotes et hors quotes en un seul token WORD
+void word_token(char *str, t_token **head, t_token **actual, int *i)
+{
+	char	buff[4096];
+	int		j;
+	char	q;
+
+	j = 0;
+	while (str[*i] && str[*i] != ' ' && str[*i] != '\t' && str[*i] != '|' && str[*i] != '<' && str[*i] != '>')
+	{
+		if (str[*i] == '\'' || str[*i] == '"')
+		{
+			q = str[*i];
+			(*i)++;
+			while (str[*i] && str[*i] != q && j < 4095)
+				buff[j++] = str[(*i)++];
+			if (str[*i] == q)
+				(*i)++;
+		}
+		else
+			buff[j++] = str[(*i)++];
+	}
+	buff[j] = '\0';
+	if (j > 0)
+	{
+		t_token *new = create_token(WORD, buff);
+		add_token(head, actual, new);
+	}
+}
