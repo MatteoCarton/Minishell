@@ -25,42 +25,56 @@ void    pipe_token(char *line,t_token **head, t_token **actual, int *i)
     }
 }
 /*redirect token, on cree et on ajt a la liste*/
-void in_out_token(char *str, t_token **head, t_token **actual, int *i)
+static t_token *handle_redirect_in(char *str, int *i)
 {
-    t_token *new;
-    
     if (str[*i] == '<')
     {
         if (str[*i + 1] == '<')
         {
-            new = create_token(HEREDOC, "<<");
             (*i) += 2;
+            return (create_token(HEREDOC, "<<"));
         }
         else
         {
-            new = create_token(IN, "<");
             (*i)++;
+            return (create_token(IN, "<"));
         }
     }
-    else if (str[*i] == '>')
+    return (NULL);
+}
+
+static t_token *handle_redirect_out(char *str, int *i)
+{
+    if (str[*i] == '>')
     {
         if (str[*i + 1] == '>')
         {
-            new = create_token(APPEND, ">>");
             (*i) += 2;
+            return (create_token(APPEND, ">>"));
         }
         else
         {
-            new = create_token(OUT, ">");
             (*i)++;
+            return (create_token(OUT, ">"));
         }
     }
-    add_token(head, actual, new);
+    return (NULL);
+}
+
+void in_out_token(char *str, t_token **head, t_token **actual, int *i)
+{
+    t_token *new;
+
+    new = handle_redirect_in(str, i);
+    if (!new)
+        new = handle_redirect_out(str, i);
+    if (new)
+        add_token(head, actual, new);
 }
 /*on gere les guillemet char buff qui prendra les info dans les quotes grande taille pour gerer un max d erreur sinon 
 peut etre opti avec un realloc mais flemme, on met dans le buff tout ce qu il y a dedans si on rencontre pipe redirect ou space
 on break , marque la fin puis on cree le token et on ajt a la liste*/
-
+//26 ligne
 void    quotes_token(char *str, t_token **head, t_token **actual, int *i)
 {
     t_token *new;

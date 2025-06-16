@@ -41,7 +41,7 @@ int valid_env(char *str)
     }
     return (1);
 }
-
+//27 ligne
 void    all_export(char ***env)
 {
     int i;
@@ -73,37 +73,42 @@ void    all_export(char ***env)
     free(output);
 }
 
-void    export_env(char **arg, char ***env, int *exit)
+void export_with_args(char **arg, char ***env, int *exit)
 {
     int check;
     int i;
     int local_exit;
-
+    
     local_exit = 0;
+    i = 1;
+    while (arg[i])
+    {
+        check = valid_env(arg[i]);
+        if (!check)
+        {
+            local_exit = 1;
+            write(2, "minishell: export: '", 20);
+            write(2, arg[i], ft_strlen(arg[i]));
+            write(2, "' : not a valid identifier\n", 27);
+        }
+        else if (arg[i])
+        {
+            add_env_var(env, arg[i]);
+        }
+        i++;
+    }
+    *exit = local_exit;
+}
+
+void export_env(char **arg, char ***env, int *exit)
+{
     if (arg[1])
     {
-        i = 1;
-        while (arg[i])
-        {
-            check = valid_env(arg[i]);
-            if (!check)
-            {
-                local_exit = 1;
-                write(2, "minishell: export: '", 20);
-                write(2, arg[i], ft_strlen(arg[i]));
-                write(2, "' : not a valid identifier\n", 27);
-            }
-            else if (arg[i])
-            {
-                add_env_var(env, arg[i]);
-            }
-            i++;
-        }
-        *exit = local_exit;
+        export_with_args(arg, env, exit);
     }
     else
     {
         all_export(env);
-        return ;
+        return;
     }
 }

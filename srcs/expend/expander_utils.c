@@ -44,8 +44,7 @@ char	*join_str(char *s1, char *s2)
 		j++;
 	}
 	ct[j + i] = '\0';
-	free(s1);
-	return (ct);
+	return (free(s1),ct);
 }
 
 char	*join_char(char *s, char c)

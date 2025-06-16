@@ -92,7 +92,7 @@ static void	init_heredoc_fds(t_command *cmd)
 		current_cmd = current_cmd->next;
 	}
 }
-
+/*
 int	exec(t_command *cmd, t_shell *shell)
 {
 	pid_t pid;
@@ -187,4 +187,122 @@ int	exec(t_command *cmd, t_shell *shell)
 		g_exitcode = 1;
 	free(path);
 	return (g_exitcode);
+}*/
+static int check_output_redirection(t_command *cmd)
+{
+    t_redirection *tmp;
+    
+    tmp = cmd->redirection;
+    while (tmp)
+    {
+        if (tmp->type == OUT || tmp->type == APPEND)
+            return (1);
+        tmp = tmp->next;
+    }
+    return (0);
+}
+
+static int handle_builtin_child(t_command *cmd, t_shell *shell)
+{
+    setup_child_signals();
+    if (!exec_redirections(cmd))
+        return (1);
+    return (execute_builtin(cmd, shell));
+}
+
+static int handle_wait_status(int status)
+{
+    setup_shell_signals();
+    if (WIFSIGNALED(status))
+        write(1, "\n", 1);
+    if (WIFEXITED(status))
+        g_exitcode = WEXITSTATUS(status);
+    else
+        g_exitcode = 1;
+    return (g_exitcode);
+}
+
+static int exec_builtin_with_fork(t_command *cmd, t_shell *shell)
+{
+    pid_t pid;
+    int status;
+    
+    pid = fork();
+    if (pid < 0)
+    {
+        perror("minishell: fork");
+        g_exitcode = 1;
+        return (1);
+    }
+    if (pid == 0)
+        return (handle_builtin_child(cmd, shell));
+    signal(SIGINT, SIG_IGN);
+    waitpid(pid, &status, 0);
+    return (handle_wait_status(status));
+}
+
+static int setup_external_exec(t_command *cmd, t_shell *shell, char **path)
+{
+    if (!exec_redirections(cmd))
+        return (0);
+    *path = get_exec_path(cmd->args[0], shell->env);
+    if (!*path)
+    {
+        g_exitcode = 127;
+        return (0);
+    }
+    return (1);
+}
+
+static int handle_external_child(char *path, t_command *cmd, t_shell *shell)
+{
+    setup_child_signals();
+    exec_redirections(cmd);
+    exec_child_process(path, cmd, shell);
+    return (0);
+}
+
+static int exec_external_command(t_command *cmd, t_shell *shell)
+{
+    pid_t pid;
+    char *path;
+    int status;
+    
+    if (!setup_external_exec(cmd, shell, &path))
+        return (g_exitcode);
+    pid = fork();
+    if (pid < 0)
+    {
+        perror("minishell: fork");
+        g_exitcode = 1;
+        free(path);
+        return (1);
+    }
+    if (pid == 0)
+        return (handle_external_child(path, cmd, shell));
+    signal(SIGINT, SIG_IGN);
+    waitpid(pid, &status, 0);
+    free(path);
+    return (handle_wait_status(status));
+}
+
+int exec(t_command *cmd, t_shell *shell)
+{
+    int has_output_redirection;
+    
+    if (!cmd)
+        return (0);
+    init_heredoc_fds(cmd);
+    if (cmd && cmd->next)
+        return (exec_pipe(cmd, shell));
+    if (!cmd->args || !cmd->args[0])
+        return (0);
+    has_output_redirection = check_output_redirection(cmd);
+    if (is_builtin(cmd->args[0]))
+    {
+        if (has_output_redirection)
+            return (exec_builtin_with_fork(cmd, shell));
+        return (execute_builtin(cmd, shell));
+    }
+    return (exec_external_command(cmd, shell));
 }

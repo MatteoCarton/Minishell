@@ -36,7 +36,6 @@ static void execute_child_pipe(t_command *cmd, int *pipes, int index, int n_pipe
         close(pipes[i]);
         i++;
     }
-
     if (is_builtin(cmd->args[0])) // check builtin
     {
         g_exitcode = execute_builtin(cmd, shell);

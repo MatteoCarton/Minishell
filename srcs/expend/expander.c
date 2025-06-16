@@ -45,40 +45,51 @@ char *get_var_name(char *str)
     return (name);
 }
 
-void replace_dollar(char **str, char **new_str, t_shell g_env, int *i)
+char	*handle_env_var(char **str, t_shell g_env, int *i)
 {
-    char *var_name;
-    char *env_value;
-    char *to_add;
-    //seul ou suivi d'espace littéral
-    if (!(*str)[*i + 1] || (*str)[*i + 1] == ' ')
-        to_add = strdup("$");
-    
-    //code de sortie
-    else if ((*str)[*i + 1] == '?')
-    {
-        to_add = ft_itoa(g_exitcode);
-        (*i)++;
-    }
-    //variable environnement
-    else
-    {
-        var_name = get_var_name(&(*str)[*i]);
-        if (var_name)
-        {
-            env_value = find_env_value(g_env.env, var_name);
-            if (!env_value)
-                to_add = strdup("");
-            else
-                to_add = strdup(env_value);
-            *i += strlen(var_name);
-            free(var_name);
-        }
-        else
-            to_add = strdup("$");
-    }
-    *new_str = join_str(*new_str, to_add);
-    free(to_add);
+	char	*var_name;
+	char	*env_value;
+	char	*to_add;
+
+	var_name = get_var_name(&(*str)[*i]);
+	if (var_name)
+	{
+		env_value = find_env_value(g_env.env, var_name);
+		if (!env_value)
+			to_add = strdup("");
+		else
+			to_add = strdup(env_value);
+		*i += strlen(var_name);
+		free(var_name);
+	}
+	else
+		to_add = strdup("$");
+	return (to_add);
+}
+
+char	*get_replacement_value(char **str, t_shell g_env, int *i)
+{
+	char	*to_add;
+
+	if (!(*str)[*i + 1] || (*str)[*i + 1] == ' ')
+		to_add = strdup("$");
+	else if ((*str)[*i + 1] == '?')
+	{
+		to_add = ft_itoa(g_exitcode);
+		(*i)++;
+	}
+	else
+		to_add = handle_env_var(str, g_env, i);
+	return (to_add);
+}
+
+void	replace_dollar(char **str, char **new_str, t_shell g_env, int *i)
+{
+	char	*to_add;
+
+	to_add = get_replacement_value(str, g_env, i);
+	*new_str = join_str(*new_str, to_add);
+	free(to_add);
 }
 
 int joignable(char **str, char **new_str, t_shell g_env, int *i, int in_single)
@@ -96,38 +107,49 @@ int joignable(char **str, char **new_str, t_shell g_env, int *i, int in_single)
     return (0);
 }
 
-void expand_dollar(char **str, t_shell g_env)
+int	process_char(char **str, char **new_str, t_shell g_env, int *i, int in_single)
 {
-    char *new_str;
-    char *tmp;
-    int i = 0;
-    int in_single = 0;
-    int in_double = 0;
-    
-    if (!str || !*str)
-        return ;
-    new_str = strdup("");
-    if (!new_str)
-    {
-        *str = NULL;
-        return;
-    }
-    while ((*str)[i])
-    {
-        update_quotes_state((*str)[i], &in_single, &in_double);
-        if (!joignable(str, &new_str, g_env, &i, in_single))
-        {
-            tmp = join_char(new_str, (*str)[i]);
-            if (!tmp)
-            {
-                free(new_str);
-                *str = NULL;
-                return;
-            }
-            free(new_str);
-            new_str = tmp;
-            i++;
-        }
-    }
-    *str = new_str;
+	char	*tmp;
+
+	if (!joignable(str, new_str, g_env, i, in_single))
+	{
+		tmp = join_char(*new_str, (*str)[*i]);
+		if (!tmp)
+		{
+			free(*new_str);
+			*str = NULL;
+			return (0);
+		}
+		free(*new_str);
+		*new_str = tmp;
+		(*i)++;
+	}
+	return (1);
+}
+
+void	expand_dollar(char **str, t_shell g_env)
+{
+	char	*new_str;
+	int		i;
+	int		in_single;
+	int		in_double;
+
+	i = 0;
+	in_single = 0;
+	in_double = 0;
+	if (!str || !*str)
+		return ;
+	new_str = strdup("");
+	if (!new_str)
+	{
+		*str = NULL;
+		return ;
+	}
+	while ((*str)[i])
+	{
+		update_quotes_state((*str)[i], &in_single, &in_double);
+		if (!process_char(str, &new_str, g_env, &i, in_single))
+			return ;
+	}
+	*str = new_str;
 }

@@ -34,6 +34,35 @@ t_command *init_command(void)
     cmd->next = NULL;
     return (cmd);
 }
+//25 ligne
+static void arg_while(t_command **cmd, char **arg, char ***new_args)
+{
+    int i;
+
+    i = 0;
+    while ((*cmd)->args && (*cmd)->args[i])
+    {
+        (*new_args)[i] = ft_strdup((*cmd)->args[i]);
+        if (!(*new_args)[i])
+        {
+            while (--i >= 0)
+                free((*new_args)[i]);
+            free(*new_args);
+            free_command(*cmd);
+            return ;
+        }
+        i++;
+    }
+    (*new_args)[i] = ft_strdup(*arg);
+    if (!(*new_args)[i])
+    {
+        while (--i >= 0)
+            free(*new_args[i]);
+        free(*new_args);
+        free_command(*cmd);
+        return ;
+    }
+}
 
 void add_argument(t_command *cmd, char *arg)
 {
@@ -50,29 +79,7 @@ void add_argument(t_command *cmd, char *arg)
         free_command(cmd);
         return ;
     }
-    i = 0;
-    while (cmd->args && cmd->args[i])
-    {
-        new_args[i] = ft_strdup(cmd->args[i]);
-        if (!new_args[i])
-        {
-            while (--i >= 0)
-                free(new_args[i]);
-            free(new_args);
-            free_command(cmd);
-            return ;
-        }
-        i++;
-    }
-    new_args[i] = ft_strdup(arg);
-    if (!new_args[i])
-    {
-        while (--i >= 0)
-            free(new_args[i]);
-        free(new_args);
-        free_command(cmd);
-        return ;
-    }
+    arg_while(&cmd, &arg, &new_args);
     j = 0;
     if (cmd->args)
     {
@@ -144,52 +151,45 @@ int handle_redirection(t_command *cmd, t_token *current)
         return (0);
     return (1);
 }
+static int parse_while(t_command **cmd, t_command **first_cmd, t_token **current)
+{
+    while ((*current))
+    {
+        if ((*current)->type == WORD)
+            handle_argument((*cmd), (*current));
+        else if ((*current)->type == PIPE)
+        {
+            if (!(*current)->next || (*current)->next->type == PIPE)// Erreur : pipe à la fin ou double pipe
+                return (write(2, "minishell: syntax error\n", 24),free_command((*first_cmd)), 1);
+            (*cmd) = handle_pipe((*cmd));
+            if (!(*cmd))
+                return (free_command((*first_cmd)), 1);
+        }
+        else if ((*current)->type == IN || (*current)->type == OUT || 
+                 (*current)->type == APPEND || (*current)->type == HEREDOC)
+        {
+            if (!handle_redirection((*cmd), (*current)))
+                return (free_command((*first_cmd)), 1);
+            (*current) = (*current)->next;
+        }
+        (*current) = (*current)->next;
+    }
+    return (0);
+}
 
 t_command *parse_tokens(t_token *tokens)
 {
+    t_command *first_cmd;
+    t_command *cmd;
+    t_token *current;
     if (!tokens)
         return (NULL);
-    // Erreur : pipe en début de ligne
     if (tokens->type == PIPE)
-    {
-        write(2, "minishell: syntax error\n", 24);
+        return (write(2, "minishell: syntax error\n", 24), NULL);
+    first_cmd = init_command();
+    cmd = first_cmd;
+    current = tokens;
+    if (parse_while(&cmd, &first_cmd, &current) == 1)
         return (NULL);
-    }
-
-    t_command *first_cmd = init_command();
-    t_command *cmd = first_cmd;
-    t_token *current = tokens;
-    while (current)
-    {
-        if (current->type == WORD)
-            handle_argument(cmd, current);
-        else if (current->type == PIPE)
-        {
-            // Erreur : pipe à la fin ou double pipe
-            if (!current->next || current->next->type == PIPE)
-            {
-                write(2, "minishell: syntax error\n", 24);
-                free_command(first_cmd);
-                return (NULL);
-            }
-            cmd = handle_pipe(cmd);
-            if (!cmd)
-            {
-                free_command(first_cmd);
-                return (NULL);
-            }
-        }
-        else if (current->type == IN || current->type == OUT || 
-                 current->type == APPEND || current->type == HEREDOC)
-        {
-            if (!handle_redirection(cmd, current))
-            {
-                free_command(first_cmd);
-                return (NULL);
-            }
-            current = current->next;
-        }
-        current = current->next;
-    }
     return (first_cmd);
 }
