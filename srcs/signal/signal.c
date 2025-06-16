@@ -1,7 +1,5 @@
 #include "../../inc/minishell.h"
 
-int g_excode = 0;
-
 /* Gestion du signal SIGINT (Ctrl+C) dans le shell principal */
 static void handle_sigint(int signal)
 {
@@ -10,7 +8,7 @@ static void handle_sigint(int signal)
     rl_replace_line("", 0);
     rl_on_new_line();
     rl_redisplay();
-    g_excode = 130;
+    g_exitcode = 130;
 }
 
 /* Gestion du signal SIGINT dans les commandes */

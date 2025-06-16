@@ -22,6 +22,8 @@ SRCS = \
 	$(SRC_PATH)/exec/exec.c \
 	$(SRC_PATH)/exec/pipe.c \
 	$(SRC_PATH)/exec/find_path.c \
+	$(SRC_PATH)/exec/redirections.c \
+	$(SRC_PATH)/exec/pipe.c \
 	$(SRC_PATH)/exec/builtin/ft_pwd.c \
 	$(SRC_PATH)/exec/builtin/ft_env.c \
 	$(SRC_PATH)/exec/builtin/ft_echo.c \
@@ -39,17 +41,13 @@ OBJS = $(SRCS:$(SRC_PATH)/%.c=$(OBJ_PATH)/%.o)
 NAME = minishell
 LIBS = -lreadline -Llibft -lft
 
-all: msg $(NAME)
+all: $(NAME)
 
-msg:
-	@echo "\n$(BLUE)MINISHELL PROJECT - 42$(RESET)\n"
-
-$(NAME): libft/libft.a $(OBJS)
+$(NAME): $(OBJS)
+	@echo "$(CYAN)Compiling: libft...$(RESET)"
+	@$(MAKE) -C ./libft --silent
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBS)
 	@echo "\n$(GREEN)READY TO EXECUTE: ./minishell$(RESET)\n"
-
-libft/libft.a:
-	@$(MAKE) -C libft
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	@mkdir -p $(dir $@)
@@ -57,17 +55,16 @@ $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	@echo "🧹 $(YELLOW)Cleaning object files...$(RESET)"
+	@echo "$(YELLOW)Cleaning object files...$(RESET)"
 	@rm -rf $(OBJ_PATH)
-	@$(MAKE) -C libft clean
+	@$(MAKE) -s -C libft clean
 	@echo "$(GREEN)Object files removed.$(RESET)"
 
 fclean: clean
-	@echo "\n$(RED)Full cleanup initiated...$(RESET)"
 	@rm -f $(NAME)
-	@$(MAKE) -C libft fclean
+	@$(MAKE) -s -C libft fclean
 	@echo "$(GREEN)Executable removed.$(RESET)"
 
 re: fclean all
 
-.PHONY: all clean fclean re msg
+.PHONY: all clean fclean re

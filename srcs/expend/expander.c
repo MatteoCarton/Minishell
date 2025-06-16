@@ -99,6 +99,7 @@ int joignable(char **str, char **new_str, t_shell g_env, int *i, int in_single)
 void expand_dollar(char **str, t_shell g_env)
 {
     char *new_str;
+    char *tmp;
     int i = 0;
     int in_single = 0;
     int in_double = 0;
@@ -107,16 +108,26 @@ void expand_dollar(char **str, t_shell g_env)
         return ;
     new_str = strdup("");
     if (!new_str)
+    {
+        *str = NULL;
         return;
+    }
     while ((*str)[i])
     {
         update_quotes_state((*str)[i], &in_single, &in_double);
         if (!joignable(str, &new_str, g_env, &i, in_single))
         {
-            new_str = join_char(new_str, (*str)[i]);
+            tmp = join_char(new_str, (*str)[i]);
+            if (!tmp)
+            {
+                free(new_str);
+                *str = NULL;
+                return;
+            }
+            free(new_str);
+            new_str = tmp;
             i++;
         }
     }
-    free(*str);
     *str = new_str;
 }

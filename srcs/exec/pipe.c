@@ -21,21 +21,28 @@ static void execute_child_pipe(t_command *cmd, int *pipes, int index, int n_pipe
     char *path;
 
     i = 0;
+        setup_child_signals();
     if (index > 0) // pas la premier du pipe, 
         dup2(pipes[(index - 1) * 2], STDIN_FILENO);
     if (index < n_pipes) // redirection output vers le pipe suivant
         dup2(pipes[index * 2 + 1], STDOUT_FILENO);
+
+    // puis les redirections a la fin pour qu'elles ecrasent les pipes si necessaire
+    // du coup si ya "cmd > file.txt | wc -l", le > file.txt va ecraser la sortie vers le pipe
+    exec_redirections(cmd);
+
     while (i < n_pipes * 2)
     {
         close(pipes[i]);
         i++;
     }
+
     if (is_builtin(cmd->args[0])) // check builtin
     {
         shell->exit = execute_builtin(cmd, shell);
         exit(shell->exit);
     }
-    path = get_exec_path(cmd->args[0], shell->env, shell);
+    path = get_exec_path(cmd->args[0], shell->env);
     if (!path)
     {
         shell->exit = 127;
@@ -136,5 +143,4 @@ int exec_pipe(t_command *cmd, t_shell *shell)
     free(pipes);
     return (shell->exit);
 }
-
 
