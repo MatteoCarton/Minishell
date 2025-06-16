@@ -39,13 +39,13 @@ static void execute_child_pipe(t_command *cmd, int *pipes, int index, int n_pipe
 
     if (is_builtin(cmd->args[0])) // check builtin
     {
-        shell->exit = execute_builtin(cmd, shell);
-        exit(shell->exit);
+        g_exitcode = execute_builtin(cmd, shell);
+        exit(g_exitcode);
     }
     path = get_exec_path(cmd->args[0], shell->env);
     if (!path)
     {
-        shell->exit = 127;
+        g_exitcode = 127;
         exit(127);
     }
     execve(path, cmd->args, shell->env); // fonction sys POSIX qui switch processus courant par un autre programme
@@ -54,7 +54,7 @@ static void execute_child_pipe(t_command *cmd, int *pipes, int index, int n_pipe
     exit(EXIT_FAILURE);
 }
 
-static void wait_all_children(t_shell *shell, int n_cmd)
+static void wait_all_children(int n_cmd)
 {
     int status;
     int i = 0;
@@ -64,15 +64,15 @@ static void wait_all_children(t_shell *shell, int n_cmd)
         if (wait(&status) > 0)
         {
             if (WIFEXITED(status))
-                shell->exit = WEXITSTATUS(status);
+                g_exitcode = WEXITSTATUS(status);
             else
-                shell->exit = 1;
+                g_exitcode = 1;
         }
         i++;
     }
 }
 
-static int init_pipe_data(t_command *cmd, t_shell *shell, int **pipes, int *n_pipes, int *n_cmd)
+static int init_pipe_data(t_command *cmd, int **pipes, int *n_pipes, int *n_cmd)
 {
     int i;
 
@@ -85,7 +85,7 @@ static int init_pipe_data(t_command *cmd, t_shell *shell, int **pipes, int *n_pi
     if (!*pipes)
     {
         perror("minishell: malloc");
-        shell->exit = 1;
+        g_exitcode = 1;
         return (1);
     }
     while (i < *n_pipes)
@@ -93,7 +93,7 @@ static int init_pipe_data(t_command *cmd, t_shell *shell, int **pipes, int *n_pi
         if (pipe(&(*pipes)[i * 2]) == -1) // pour chaque pipe read end et write end qui sont des descripteurs
         {
             perror("minishell: pipe");
-            shell->exit = 1;
+            g_exitcode = 1;
             return (free(*pipes), 1);
         }
         i++;
@@ -113,7 +113,7 @@ static int fork_children(t_command *cmd, int *pipes, int n_pipes, t_shell *shell
         if (pid < 0)
         {
             perror("minishell: fork");
-            shell->exit = 1;
+            g_exitcode = 1;
             free(pipes);
             return (1);
         }
@@ -133,14 +133,14 @@ int exec_pipe(t_command *cmd, t_shell *shell)
     int i;
 
     i = 0;
-    if (init_pipe_data(cmd, shell, &pipes, &n_pipes, &n_cmd) == 1)
+    if (init_pipe_data(cmd, &pipes, &n_pipes, &n_cmd) == 1)
         return (1);
     if (fork_children(cmd, pipes, n_pipes, shell) == 1)
         return (1);
     while (i < n_pipes * 2) // ferme descripteurs dans le processus parent après avoir lancé les enfants
         close(pipes[i++]);
-    wait_all_children(shell, n_cmd); // attend la fin de tous les processus enfant
+    wait_all_children(n_cmd); // attend la fin de tous les processus enfant
     free(pipes);
-    return (shell->exit);
+    return (g_exitcode);
 }
 

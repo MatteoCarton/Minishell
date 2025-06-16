@@ -16,7 +16,7 @@ static bool  is_n(char *arg)
     return (true);
 }
 
-void ft_echo(char **args)
+int ft_echo(char **args)
 {
     int i;
     int n_or_not;
@@ -39,6 +39,7 @@ void ft_echo(char **args)
 
     if (n_or_not == false)
         printf("\n");
+    return (0);
 }
 
 // A AJOUTER ECHO le $

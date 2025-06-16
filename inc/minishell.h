@@ -44,7 +44,6 @@ typedef struct s_token
 typedef struct s_shell
 {
 	char			**env;
-	int				exit;
 }					t_shell;
 
 typedef struct s_redirection
@@ -122,8 +121,8 @@ int	handle_heredoc(const char *delimiter);
 // BUILTINS
 void				ft_pwd(void);
 void				ft_env(char **envp);
-void				ft_echo(char **args);
-int	ft_exit(char **args, t_shell *shell);
+int				ft_echo(char **args);
+int	ft_exit(char **args);
 void				ft_cd(char **args, t_shell *shell);
 char				*update_old_pwd_env(char **env);
 int					update_new_pwd_env(char **env, const char *old_pwd,
@@ -134,7 +133,7 @@ void				unset_env(char **arg, char ***env, char *var_str,
 						int *exit);
 char	*find_env_value(char **env, char *var);
 int	is_builtin(char *arg);
-char	*get_exec_path(char *cmd, char **env, t_shell *shell);
+char	*get_exec_path(char *cmd, char **env);
 // Builtin utils
 int					check_line(char ***env, char *str);
 char				*get_key(char *str);

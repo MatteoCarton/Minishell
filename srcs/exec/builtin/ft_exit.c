@@ -77,7 +77,7 @@ static int	ft_atoi_with_overflow(const char *str)
 	while (str[i] && str[i] >= '0' && str[i] <= '9')
 	{
 		if (overflow_or_not(result, str[i] - '0', plus_sign, str))
-			exit(2);
+			return -1;
 		result = result * 10 + (str[i] - '0');
 		i++;
 	}
@@ -86,14 +86,14 @@ static int	ft_atoi_with_overflow(const char *str)
 	return (-result);
 }
 
-int	ft_exit(char **args, t_shell *shell)
+int	ft_exit(char **args)
 {
 	int	code;
 
 	printf("exit\n");
 	if (!args || number_of_args(args) == 1)
 	{
-		g_exitcode = shell->exit;
+		g_exitcode = 1;
 		return (1);
 	}
 	if (!is_numeric(args[1]))
@@ -107,11 +107,15 @@ int	ft_exit(char **args, t_shell *shell)
 	if (number_of_args(args) > 2)
 	{
 		write(2, "minishell: exit: too many arguments\n", 36);
-		shell->exit = 1;
 		g_exitcode = 1;
 		return (0);
 	}
 	code = ft_atoi_with_overflow(args[1]);
+	if (code == -1)
+	{
+		g_exitcode = 2;
+		return (1);
+	}
 	g_exitcode = (unsigned char)code;
 	return (1);
 }

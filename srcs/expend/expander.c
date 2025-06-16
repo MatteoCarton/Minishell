@@ -57,7 +57,7 @@ void replace_dollar(char **str, char **new_str, t_shell g_env, int *i)
     //code de sortie
     else if ((*str)[*i + 1] == '?')
     {
-        to_add = ft_itoa(g_env.exit);
+        to_add = ft_itoa(g_exitcode);
         (*i)++;
     }
     //variable environnement

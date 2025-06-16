@@ -113,5 +113,5 @@ int main(int argc, char **argv, char **envp)
     }
     free_env(m.env);
     rl_clear_history(); 
-    return (0);
+    return (g_exitcode);
 }
