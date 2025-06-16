@@ -65,7 +65,7 @@ static int	overflow_or_not(long long result, int digit, bool plus_sign,
 	return (0);
 }
 
-static int	ft_atoi_with_overflow(const char *str)
+static int	ft_atoi_with_overflow(const char *str, int *error)
 {
 	int			i;
 	bool		plus_sign;
@@ -74,10 +74,14 @@ static int	ft_atoi_with_overflow(const char *str)
 	i = 0;
 	result = 0;
 	plus_sign = handle_sign(str, &i);
+	*error = 0;
 	while (str[i] && str[i] >= '0' && str[i] <= '9')
 	{
 		if (overflow_or_not(result, str[i] - '0', plus_sign, str))
-			return -1;
+		{
+			*error = 1;
+			return (0);
+		}
 		result = result * 10 + (str[i] - '0');
 		i++;
 	}
@@ -89,20 +93,18 @@ static int	ft_atoi_with_overflow(const char *str)
 int	ft_exit(char **args)
 {
 	int	code;
+	int	error;
 
 	printf("exit\n");
 	if (!args || number_of_args(args) == 1)
-	{
-		g_exitcode = 1;
-		return (1);
-	}
+		return (-19);
 	if (!is_numeric(args[1]))
 	{
 		write(2, "minishell: exit: ", 17);
 		write(2, args[1], ft_strlen(args[1]));
 		write(2, ": numeric argument required\n", 28);
 		g_exitcode = 2;
-		return (1);
+		return (-19);
 	}
 	if (number_of_args(args) > 2)
 	{
@@ -110,12 +112,12 @@ int	ft_exit(char **args)
 		g_exitcode = 1;
 		return (0);
 	}
-	code = ft_atoi_with_overflow(args[1]);
-	if (code == -1)
+	code = ft_atoi_with_overflow(args[1], &error);
+	if (error)
 	{
 		g_exitcode = 2;
-		return (1);
+		return (-19);
 	}
 	g_exitcode = (unsigned char)code;
-	return (1);
+	return (-19);
 }

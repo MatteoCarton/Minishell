@@ -101,7 +101,7 @@ int main(int argc, char **argv, char **envp)
             add_history(line);
             result = start(&line, &m);
             free(line);
-            if (result == -19)
+            if (result == -19) // dans le cas de exit
             {
                 free_env(m.env);
                 rl_clear_history();

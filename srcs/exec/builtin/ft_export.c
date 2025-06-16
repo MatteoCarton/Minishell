@@ -73,25 +73,33 @@ void    all_export(char ***env)
     free(output);
 }
 
-void    export_env(char **arg, char ***env, char *var_str, int *exit)
+void    export_env(char **arg, char ***env, int *exit)
 {
     int check;
+    int i;
+    int local_exit;
 
-    check = 0;
+    local_exit = 0;
     if (arg[1])
     {
-        check = valid_env(var_str);
-        if (!check)
+        i = 1;
+        while (arg[i])
         {
-            *exit = 1;
-            printf("minishell: export: '%s' : not a valid identifier\n", var_str);
-            return ;
+            check = valid_env(arg[i]);
+            if (!check)
+            {
+                local_exit = 1;
+                write(2, "minishell: export: '", 20);
+                write(2, arg[i], ft_strlen(arg[i]));
+                write(2, "' : not a valid identifier\n", 27);
+            }
+            else if (arg[i])
+            {
+                add_env_var(env, arg[i]);
+            }
+            i++;
         }
-        if(var_str)
-        {
-            add_env_var(env, var_str);
-            *exit = 0;
-        }
+        *exit = local_exit;
     }
     else
     {

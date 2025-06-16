@@ -128,8 +128,7 @@ void				ft_cd(char **args, t_shell *shell);
 char				*update_old_pwd_env(char **env);
 int					update_new_pwd_env(char **env, const char *old_pwd,
 						const char *path);
-void				export_env(char **arg, char ***env, char *var_str,
-						int *exit);
+void				export_env(char **arg, char ***env, int *exit);
 void				unset_env(char **arg, char ***env, char *var_str,
 						int *exit);
 char	*find_env_value(char **env, char *var);

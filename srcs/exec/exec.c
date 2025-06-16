@@ -57,22 +57,20 @@ int	execute_builtin(t_command *cmd, t_shell *shell)
 {
 	if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
 	{
-		if (ft_exit(cmd->args))
-			return (-19);
-		return (0);
+		return(ft_exit(cmd->args));
 	}
 	if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
-		return ft_echo(cmd->args);
+		return (ft_echo(cmd->args));
 	if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
-		return ft_pwd(), 0;
+		return (ft_pwd(), g_exitcode);
 	if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
-		return ft_cd(cmd->args, shell), 0;
+		return (ft_cd(cmd->args, shell), g_exitcode);
 	if (ft_strncmp(cmd->args[0], "env", 4) == 0)
-		return ft_env(shell->env), 0;
+		return (ft_env(shell->env), g_exitcode);
 	if (ft_strncmp(cmd->args[0], "unset", 5) == 0)
-		return unset_env(cmd->args, &shell->env, cmd->args[1], &g_exitcode), 0;
+		return (unset_env(cmd->args, &shell->env, cmd->args[1], &g_exitcode), g_exitcode);
 	if (ft_strncmp(cmd->args[0], "export", 7) == 0)
-		return export_env(cmd->args, &shell->env, cmd->args[1], &g_exitcode), 0;
+		return (export_env(cmd->args, &shell->env, &g_exitcode), g_exitcode);
 	return (0);
 }
 
@@ -97,20 +95,20 @@ static void	init_heredoc_fds(t_command *cmd)
 
 int	exec(t_command *cmd, t_shell *shell)
 {
-	if (!cmd)
-		return (0);
-	init_heredoc_fds(cmd);
-
-	if (cmd && cmd->next)
-		return (exec_pipe(cmd, shell));
-
 	pid_t pid;
 	char *path;
 	int status;
 	t_redirection *tmp;
 	int has_output_redirection;
 
-	if (!cmd || !cmd->args || !cmd->args[0])
+    if (!cmd)
+		return (0);
+	init_heredoc_fds(cmd);
+
+	if (cmd && cmd->next)
+		return (exec_pipe(cmd, shell));
+
+	if (!cmd->args || !cmd->args[0])
 		return (0);
 
 	has_output_redirection = 0;
@@ -155,8 +153,7 @@ int	exec(t_command *cmd, t_shell *shell)
 			return (g_exitcode);
 		}
 		// Pas de redirection : execution dans le parent
-		g_exitcode = execute_builtin(cmd, shell);
-		return (g_exitcode);
+		return (execute_builtin(cmd, shell));
 	}
 
 	if (!exec_redirections(cmd))
