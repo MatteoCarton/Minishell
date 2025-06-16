@@ -1,19 +1,36 @@
 #include "../../inc/minishell.h"
 
+static t_redirection *add_redirection(t_redirection **redirection_list, t_token_type type, char *filename)
+{
+    t_redirection *new;
+    t_redirection *tmp;
+
+    new = malloc(sizeof(t_redirection));
+    if (!new)
+        return (NULL);
+    new->type = type;
+    new->filename = ft_strdup(filename);
+    new->next = NULL;
+    if (!*redirection_list)
+        *redirection_list = new;
+    else
+    {
+        tmp = *redirection_list;
+        while (tmp->next)
+            tmp = tmp->next;
+        tmp->next = new;
+    }
+    return (new);
+}
+
 t_command *init_command(void)
 {
     t_command *cmd = malloc(sizeof(t_command));
     if (!cmd)
         return (NULL);
-
     cmd->args = NULL;
-    cmd->input_file = NULL;
-    cmd->output_file = NULL;
-    cmd->append = 0;
-    cmd->delimiter = NULL;
-    cmd->heredoc = NULL;
+    cmd->redirection = NULL;
     cmd->next = NULL;
-
     return (cmd);
 }
 
@@ -53,10 +70,22 @@ void add_argument(t_command *cmd, char *arg)
     cmd->args = new_args;
 }
 
+void free_redirections(t_redirection *redir)
+{
+    t_redirection *tmp;
+    while (redir)
+    {
+        tmp = redir->next;
+        if (redir->filename)
+            free(redir->filename);
+        free(redir);
+        redir = tmp;
+    }
+}
+
 void free_command(t_command *cmd)
 {
     int i;
-
     if (!cmd)
         return ;
     if (cmd->args)
@@ -69,14 +98,8 @@ void free_command(t_command *cmd)
         }
         free(cmd->args);
     }
-    if (cmd->input_file)
-        free(cmd->input_file);
-    if (cmd->output_file)
-        free(cmd->output_file);
-    if (cmd->delimiter)
-        free(cmd->delimiter);
-    if (cmd->heredoc)
-        free(cmd->heredoc);
+    if (cmd->redirection)
+        free_redirections(cmd->redirection);
     if (cmd->next)
         free_command(cmd->next);
     free(cmd);
@@ -87,7 +110,6 @@ void handle_argument(t_command *cmd, t_token *current)
     add_argument(cmd, current->str);
 }
 
-
 t_command *handle_pipe(t_command *cmd)
 {
     cmd->next = init_command();
@@ -97,47 +119,13 @@ t_command *handle_pipe(t_command *cmd)
     return (cmd);
 }
 
-
 int handle_redirection(t_command *cmd, t_token *current)
 {
     t_token *next = current->next;
-    
     if (!next || next->type != WORD)
         return (0);
-    // seule la dernière redirection du meme type est prise en compte (ex : ls < test < salut), il faut que prendre salut
-    if (current->type == IN)  // Pour <
-    {
-        if (cmd->input_file)
-            free(cmd->input_file); // libere l'ancienne valeur pour éviter un leak (si y'avais deja qqc ex : ls < test < salut), 
-        cmd->input_file = ft_strdup(next->str);
-        if (!cmd->input_file)
-            return (0);
-    }
-    else if (current->type == OUT)
-    {
-        if (cmd->output_file)
-            free(cmd->output_file);
-        cmd->output_file = ft_strdup(next->str);
-        if (!cmd->output_file)
-            return (0);
-    }
-    else if (current->type == APPEND)
-    {
-        cmd->append = 1;
-        if (cmd->output_file)
-            free(cmd->output_file);
-        cmd->output_file = ft_strdup(next->str);
-        if (!cmd->output_file)
-            return (0);
-    }
-    else if (current->type == HEREDOC)
-    {
-        if (cmd->delimiter)
-            free(cmd->delimiter);
-        cmd->delimiter = ft_strdup(next->str);
-        if (!cmd->delimiter)
-            return (0);
-    }
+    if (!add_redirection(&cmd->redirection, current->type, next->str))
+        return (0);
     return (1);
 }
 
@@ -146,7 +134,6 @@ t_command *parse_tokens(t_token *tokens)
     t_command *first_cmd = init_command();
     t_command *cmd = first_cmd;
     t_token *current = tokens;
-
     while (current)
     {
         if (current->type == WORD)

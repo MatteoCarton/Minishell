@@ -73,15 +73,31 @@ int	exec(t_command *cmd, t_shell *shell)
 	pid_t pid;
 	char *path;
 	int status;
-    int result;
+	int result;
 	int saved_stdout;
+	t_redirection *tmp;
+	int has_output_redirection;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
 
+    saved_stdout = -1;
+    has_output_redirection = 0;
+	// Check s'il y a une redirection de sortie (OUT ou APPEND pour l'instant)
+	tmp = cmd->redirection;
+	while (tmp)
+	{
+		if (tmp->type == OUT || tmp->type == APPEND)
+		{
+			has_output_redirection = 1;
+			break;
+		}
+		tmp = tmp->next;
+	}
+
 	if (is_builtin(cmd->args[0]))
 	{
-		if (cmd->output_file)
+		if (has_output_redirection)
 			saved_stdout = dup(STDOUT_FILENO);
 		if (!exec_redirections(cmd))
 		{
