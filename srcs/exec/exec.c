@@ -9,7 +9,7 @@ static void	exec_child_process(char *path, t_command *cmd, t_shell *shell)
 	exit(127);
 }
 
-char	*get_exec_path(char *cmd, char **env, t_shell *shell)
+char	*get_exec_path(char *cmd, char **env)
 {
 	char	*path;
 
@@ -19,7 +19,7 @@ char	*get_exec_path(char *cmd, char **env, t_shell *shell)
 		write(2, "minishell: ", 11);
 		write(2, cmd, ft_strlen(cmd));
 		write(2, ": command not found\n", 20);
-		shell->exit = 127;
+		g_exitcode = 127;
 		return (NULL);
 	}
 	return (path);
@@ -48,9 +48,12 @@ int	is_builtin(char *arg)
 
 int	execute_builtin(t_command *cmd, t_shell *shell)
 {
-	(void)shell; // A SUPPRIMER
 	if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-		return (ft_exit(cmd->args, shell), -1);
+	{
+		if (ft_exit(cmd->args, shell))
+			return (-19);
+		return (1);
+	}
 	if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
 		return (ft_echo(cmd->args), 1);
 	if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
@@ -60,16 +63,37 @@ int	execute_builtin(t_command *cmd, t_shell *shell)
 	if (ft_strncmp(cmd->args[0], "env", 4) == 0)
 		return (ft_env(shell->env), 1);
 	if (ft_strncmp(cmd->args[0], "unset", 5) == 0)
-		return (unset_env(cmd->args, &shell->env, cmd->args[1], &shell->exit),
-			1);
+		return (unset_env(cmd->args, &shell->env, cmd->args[1], &g_exitcode), 1);
 	if (ft_strncmp(cmd->args[0], "export", 7) == 0)
-		return (export_env(cmd->args, &shell->env, cmd->args[1], &shell->exit),
-			1);
+		return (export_env(cmd->args, &shell->env, cmd->args[1], &g_exitcode), 1);
 	return (0);
+}
+
+static void	init_heredoc_fds(t_command *cmd)
+{
+	t_command		*current_cmd;
+	t_redirection	*current_redir;
+
+	current_cmd = cmd;
+	while (current_cmd)
+	{
+		current_redir = current_cmd->redirection;
+		while (current_redir)
+		{
+			if (current_redir->type == HEREDOC)
+				current_redir->heredoc_fd = handle_heredoc(current_redir->filename);
+			current_redir = current_redir->next;
+		}
+		current_cmd = current_cmd->next;
+	}
 }
 
 int	exec(t_command *cmd, t_shell *shell)
 {
+	if (!cmd)
+		return (0);
+	init_heredoc_fds(cmd);
+
 	if (cmd && cmd->next)
 		return (exec_pipe(cmd, shell));
 
@@ -102,47 +126,60 @@ int	exec(t_command *cmd, t_shell *shell)
 			if (pid < 0)
 			{
 				perror("minishell: fork");
-				shell->exit = 1;
+				g_exitcode = 1;
 				return (1);
 			}
 			if (pid == 0)
 			{
+				setup_child_signals();
 				if (!exec_redirections(cmd))
 					exit(1);
 				exit(execute_builtin(cmd, shell));
 			}
+			signal(SIGINT, SIG_IGN);
 			waitpid(pid, &status, 0);
+			setup_shell_signals();
+			if (WIFSIGNALED(status))
+				write(1, "\n", 1);
 			if (WIFEXITED(status))
-				shell->exit = WEXITSTATUS(status);
+				g_exitcode = WEXITSTATUS(status);
 			else
-				shell->exit = 1;
-			return (shell->exit);
+				g_exitcode = 1;
+			return (g_exitcode);
 		}
 		// Pas de redirection : execution dans le parent
-		return execute_builtin(cmd, shell);
+		return (execute_builtin(cmd, shell));
 	}
 
-	path = get_exec_path(cmd->args[0], shell->env, shell);
+	if (!exec_redirections(cmd))
+		return (1);
+
+	path = get_exec_path(cmd->args[0], shell->env);
 	if (!path)
 		return (127);
 	pid = fork();
 	if (pid < 0)
 	{
 		perror("minishell: fork");
-		shell->exit = 1;
+		g_exitcode = 1;
 		free(path);
 		return (1);
 	}
 	if (pid == 0)
 	{
+		setup_child_signals();
 		exec_redirections(cmd);
 		exec_child_process(path, cmd, shell);
 	}
+	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
+	setup_shell_signals();
+	if (WIFSIGNALED(status))
+		write(1, "\n", 1);
 	if (WIFEXITED(status))
-		shell->exit = WEXITSTATUS(status);
+		g_exitcode = WEXITSTATUS(status);
 	else
-		shell->exit = 1;
+		g_exitcode = 1;
 	free(path);
-	return (shell->exit);
+	return (g_exitcode);
 }

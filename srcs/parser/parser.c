@@ -10,6 +10,7 @@ static t_redirection *add_redirection(t_redirection **redirection_list, t_token_
         return (NULL);
     new->type = type;
     new->filename = ft_strdup(filename);
+    new->heredoc_fd = -1;
     new->next = NULL;
     if (!*redirection_list)
         *redirection_list = new;
@@ -38,13 +39,17 @@ void add_argument(t_command *cmd, char *arg)
 {
     int i;
     char **new_args;
+    int j;
 
     i = 0;
     while (cmd->args && cmd->args[i])
         i++;
     new_args = ft_calloc(sizeof(char *), i + 2); // +2 pour le nouvel arg et le NULL
     if (!new_args)
+    {
+        free_command(cmd);
         return ;
+    }
     i = 0;
     while (cmd->args && cmd->args[i])
     {
@@ -54,19 +59,30 @@ void add_argument(t_command *cmd, char *arg)
             while (--i >= 0)
                 free(new_args[i]);
             free(new_args);
+            free_command(cmd);
             return ;
         }
         i++;
     }
     new_args[i] = ft_strdup(arg);
     if (!new_args[i])
+    {
+        while (--i >= 0)
+            free(new_args[i]);
+        free(new_args);
+        free_command(cmd);
+        return ;
+    }
+    j = 0;
+    if (cmd->args)
+    {
+        while (cmd->args[j])
         {
-            while (--i >= 0)
-                free(new_args[i]);
-            free(new_args);
-            return ;
+            free(cmd->args[j]);
+            j++;
         }
-    free(cmd->args);
+        free(cmd->args);
+    }
     cmd->args = new_args;
 }
 
@@ -131,6 +147,15 @@ int handle_redirection(t_command *cmd, t_token *current)
 
 t_command *parse_tokens(t_token *tokens)
 {
+    if (!tokens)
+        return (NULL);
+    // Erreur : pipe en début de ligne
+    if (tokens->type == PIPE)
+    {
+        write(2, "minishell: syntax error\n", 24);
+        return (NULL);
+    }
+
     t_command *first_cmd = init_command();
     t_command *cmd = first_cmd;
     t_token *current = tokens;
@@ -140,6 +165,13 @@ t_command *parse_tokens(t_token *tokens)
             handle_argument(cmd, current);
         else if (current->type == PIPE)
         {
+            // Erreur : pipe à la fin ou double pipe
+            if (!current->next || current->next->type == PIPE)
+            {
+                write(2, "minishell: syntax error\n", 24);
+                free_command(first_cmd);
+                return (NULL);
+            }
             cmd = handle_pipe(cmd);
             if (!cmd)
             {

@@ -1,5 +1,7 @@
 #include "../inc/minishell.h"
 
+int g_exitcode = 0;
+
 int is_only_spaces(char *str)
 {
     while (*str)
@@ -39,25 +41,33 @@ char **cpy_env(char **envp)
     return(env);
 }
 
-int start(char *line, t_shell *m)
+static int start(char **line, t_shell *m)
 {
     t_token *lexed;
     t_command *cmd;
+    int result;
 
-    if (!(*line))
+    if (!(**line))
         return (1);
-    if (!check_quotes(line))
+    if (!check_quotes(*line))
         return (0);
-    expand_dollar(&line, *m);
-    lexed = get_token(line);
-    if (lexed) // si pas d'erreur
+    expand_dollar(line, *m);
+    lexed = get_token(*line);
+    if (lexed)
     {
         cmd = parse_tokens(lexed);
         if (cmd)
         {
-            exec(cmd, m);
+            result = exec(cmd, m);
             free_command(cmd);
+            if (result == -19)
+            {
+                free_token(&lexed);
+                return (-19);
+            }
         }
+        else
+            free_command(cmd);
         free_token(&lexed);
         return (1);
     }
@@ -70,12 +80,14 @@ int main(int argc, char **argv, char **envp)
 {
     (void)argv;
     char *line;
+    int result;
     t_shell m;
     
     if (argc != 1)
         return (0);
     m.env = cpy_env(envp);
-    //setup_shell_signals();
+    setup_shell_signals();
+    result = 0;
     while (19)
     {
         line = readline("matteoshell$ ");
@@ -87,8 +99,17 @@ int main(int argc, char **argv, char **envp)
         if (*line && !is_only_spaces(line))
         {
             add_history(line);
-            start(line, &m);
+            result = start(&line, &m);
+            free(line);
+            if (result == -19)
+            {
+                free_env(m.env);
+                rl_clear_history();
+                exit(g_exitcode);
+            }
         }
+        else
+            free(line);
     }
     free_env(m.env);
     rl_clear_history(); 

@@ -44,6 +44,7 @@ char	*join_str(char *s1, char *s2)
 		j++;
 	}
 	ct[j + i] = '\0';
+	free(s1);
 	return (ct);
 }
 
@@ -57,15 +58,9 @@ char	*join_char(char *s, char c)
 		i = strlen(s);
 	new_str = malloc(i + 2);
 	if (!new_str)
-	{
-		free(s);
 		return (NULL);
-	}
 	if (s)
-	{
 		strlcpy(new_str, s, i + 1);
-		free(s);
-	}
 	new_str[i] = c;
 	new_str[i + 1] = '\0';
 	return (new_str);

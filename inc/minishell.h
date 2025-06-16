@@ -18,6 +18,8 @@
 #  define EXTRA_CHAR "!#$%&()*+,-./:;=?@[\\]^_`{|}~"
 # endif
 
+extern int	g_exitcode;
+
 typedef enum s_token_type
 {
 	END_TOKEN,
@@ -49,6 +51,7 @@ typedef struct s_redirection
 {
 	t_token_type	type;      // IN, OUT, APPEND, HEREDOC
 	char			*filename;
+	int				heredoc_fd;
 	struct s_redirection	*next;
 }	t_redirection;
 
@@ -113,13 +116,14 @@ void	print_error_exit(const char *dir, const char *msg);
 int	exec_redirections(t_command *cmd);
 int exec_pipe(t_command *cmd, t_shell *shell);
 int	is_builtin(char *arg);
-char *get_exec_path(char *cmd, char **env, t_shell *shell);
+char	*get_exec_path(char *cmd, char **env);
+int	handle_heredoc(const char *delimiter);
 
 // BUILTINS
 void				ft_pwd(void);
 void				ft_env(char **envp);
 void				ft_echo(char **args);
-void				ft_exit(char **args, t_shell *shell);
+int	ft_exit(char **args, t_shell *shell);
 void				ft_cd(char **args, t_shell *shell);
 char				*update_old_pwd_env(char **env);
 int					update_new_pwd_env(char **env, const char *old_pwd,

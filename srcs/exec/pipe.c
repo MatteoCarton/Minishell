@@ -21,6 +21,7 @@ static void execute_child_pipe(t_command *cmd, int *pipes, int index, int n_pipe
     char *path;
 
     i = 0;
+        setup_child_signals();
     if (index > 0) // pas la premier du pipe, 
         dup2(pipes[(index - 1) * 2], STDIN_FILENO);
     if (index < n_pipes) // redirection output vers le pipe suivant
@@ -41,7 +42,7 @@ static void execute_child_pipe(t_command *cmd, int *pipes, int index, int n_pipe
         shell->exit = execute_builtin(cmd, shell);
         exit(shell->exit);
     }
-    path = get_exec_path(cmd->args[0], shell->env, shell);
+    path = get_exec_path(cmd->args[0], shell->env);
     if (!path)
     {
         shell->exit = 127;
