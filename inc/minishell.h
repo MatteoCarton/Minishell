@@ -111,6 +111,9 @@ int					exec(t_command *cmd, t_shell *shell);
 char *find_command_path(char *cmd, char **env);
 void	print_error_exit(const char *dir, const char *msg);
 int	exec_redirections(t_command *cmd);
+int exec_pipe(t_command *cmd, t_shell *shell);
+int	is_builtin(char *arg);
+char *get_exec_path(char *cmd, char **env, t_shell *shell);
 
 // BUILTINS
 void				ft_pwd(void);

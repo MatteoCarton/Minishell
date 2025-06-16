@@ -9,7 +9,7 @@ static void	exec_child_process(char *path, t_command *cmd, t_shell *shell)
 	exit(127);
 }
 
-static char	*get_exec_path(char *cmd, char **env, t_shell *shell)
+char	*get_exec_path(char *cmd, char **env, t_shell *shell)
 {
 	char	*path;
 
@@ -25,7 +25,7 @@ static char	*get_exec_path(char *cmd, char **env, t_shell *shell)
 	return (path);
 }
 
-static int	is_builtin(char *arg)
+int	is_builtin(char *arg)
 {
 	if (!arg)
 		return (0);
@@ -70,20 +70,19 @@ int	execute_builtin(t_command *cmd, t_shell *shell)
 
 int	exec(t_command *cmd, t_shell *shell)
 {
+	if (cmd && cmd->next)
+		return (exec_pipe(cmd, shell));
+
 	pid_t pid;
 	char *path;
 	int status;
-	int result;
-	int saved_stdout;
 	t_redirection *tmp;
 	int has_output_redirection;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
 
-    saved_stdout = -1;
-    has_output_redirection = 0;
-	// Check s'il y a une redirection de sortie (OUT ou APPEND pour l'instant)
+	has_output_redirection = 0;
 	tmp = cmd->redirection;
 	while (tmp)
 	{
@@ -98,23 +97,29 @@ int	exec(t_command *cmd, t_shell *shell)
 	if (is_builtin(cmd->args[0]))
 	{
 		if (has_output_redirection)
-			saved_stdout = dup(STDOUT_FILENO);
-		if (!exec_redirections(cmd))
 		{
-			if (saved_stdout != -1)
+			pid = fork();
+			if (pid < 0)
 			{
-				dup2(saved_stdout, STDOUT_FILENO);
-				close(saved_stdout);
+				perror("minishell: fork");
+				shell->exit = 1;
+				return (1);
 			}
-			return (1);
+			if (pid == 0)
+			{
+				if (!exec_redirections(cmd))
+					exit(1);
+				exit(execute_builtin(cmd, shell));
+			}
+			waitpid(pid, &status, 0);
+			if (WIFEXITED(status))
+				shell->exit = WEXITSTATUS(status);
+			else
+				shell->exit = 1;
+			return (shell->exit);
 		}
-		result = execute_builtin(cmd, shell);
-		if (saved_stdout != -1)
-		{
-			dup2(saved_stdout, STDOUT_FILENO);
-			close(saved_stdout);
-		}
-		return (result);
+		// Pas de redirection : execution dans le parent
+		return execute_builtin(cmd, shell);
 	}
 
 	path = get_exec_path(cmd->args[0], shell->env, shell);
