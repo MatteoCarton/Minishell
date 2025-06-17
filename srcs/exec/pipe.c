@@ -15,28 +15,11 @@ static int count_pipes(t_command *cmd)
     return (i);
 }
 
-static void execute_child_pipe(t_command *cmd, int *pipes, int index, int n_pipes, t_shell *shell)
+static void execute_command_in_child(t_command *cmd, t_shell *shell)
 {
-    int i;
     char *path;
 
-    i = 0;
-        setup_child_signals();
-    if (index > 0) // pas la premier du pipe, 
-        dup2(pipes[(index - 1) * 2], STDIN_FILENO);
-    if (index < n_pipes) // redirection output vers le pipe suivant
-        dup2(pipes[index * 2 + 1], STDOUT_FILENO);
-
-    // puis les redirections a la fin pour qu'elles ecrasent les pipes si necessaire
-    // du coup si ya "cmd > file.txt | wc -l", le > file.txt va ecraser la sortie vers le pipe
-    exec_redirections(cmd);
-
-    while (i < n_pipes * 2)
-    {
-        close(pipes[i]);
-        i++;
-    }
-    if (is_builtin(cmd->args[0])) // check builtin
+    if (is_builtin(cmd->args[0]))
     {
         g_exitcode = execute_builtin(cmd, shell);
         exit(g_exitcode);
@@ -47,10 +30,28 @@ static void execute_child_pipe(t_command *cmd, int *pipes, int index, int n_pipe
         g_exitcode = 127;
         exit(127);
     }
-    execve(path, cmd->args, shell->env); // fonction sys POSIX qui switch processus courant par un autre programme
-    perror("minishell: execve"); // message erreur basé sur la dernière erreur système
+    execve(path, cmd->args, shell->env);
+    perror("minishell: execve");
     free(path);
     exit(EXIT_FAILURE);
+}
+static void execute_child_pipe(t_command *cmd, int *pipes, int index, int n_pipes, t_shell *shell)
+{
+    int i;
+
+    setup_child_signals();
+    if (index > 0)
+        dup2(pipes[(index - 1) * 2], STDIN_FILENO);
+    if (index < n_pipes)
+        dup2(pipes[index * 2 + 1], STDOUT_FILENO);
+    exec_redirections(cmd);
+    i = 0;
+    while (i < n_pipes * 2)
+    {
+        close(pipes[i]);
+        i++;
+    }
+    execute_command_in_child(cmd, shell);
 }
 
 static void wait_all_children(int n_cmd)

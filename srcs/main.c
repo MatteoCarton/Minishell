@@ -41,17 +41,26 @@ char **cpy_env(char **envp)
     return(env);
 }
 
-static int start(char **line, t_shell *m)
+static int validate_and_preprocess(char **line, t_shell *m)
 {
-    t_token *lexed;
-    t_command *cmd;
-    int result;
-
     if (!(**line))
         return (1);
     if (!check_quotes(*line))
         return (0);
     expand_dollar(line, *m);
+    return (2);
+}
+
+static int start(char **line, t_shell *m)
+{
+    t_token *lexed;
+    t_command *cmd;
+    int result;
+    int check_result;
+    
+    check_result = validate_and_preprocess(line, m);
+    if (check_result != 2)
+        return (check_result);
     lexed = get_token(*line);
     if (lexed)
     {
@@ -61,34 +70,57 @@ static int start(char **line, t_shell *m)
             result = exec(cmd, m);
             free_command(cmd);
             if (result == -19)
-            {
-                free_token(&lexed);
-                return (-19);
-            }
+                return (free_token(&lexed),-19);
         }
         else
             free_command(cmd);
-        free_token(&lexed);
-        return (1);
+        return (free_token(&lexed), 1);
     }
     else
         return (0);
 }
 
+static int init_shell(int argc, char **envp, t_shell *shell)
+{
+    if (argc != 1)
+        return (0);
+    shell->env = cpy_env(envp);
+    setup_shell_signals();
+    return (1);
+}
 
+static int process_command_line(char *line, t_shell *m)
+{
+    int result;
+    
+    if (*line && !is_only_spaces(line))
+    {
+        add_history(line);
+        result = start(&line, m);
+        free(line);
+        if (result == -19)
+        {
+            free_env(m->env);
+            rl_clear_history();
+            exit(g_exitcode);
+        }
+    }
+    else
+    {
+        free(line);
+        result = 0;
+    }
+    return (result);
+}
 
 int main(int argc, char **argv, char **envp)
 {
     (void)argv;
     char *line;
-    int result;
     t_shell m;
     
-    if (argc != 1)
+    if (!init_shell(argc, envp, &m))
         return (0);
-    m.env = cpy_env(envp);
-    setup_shell_signals();
-    result = 0;
     while (19)
     {
         line = readline("matteoshell$ ");
@@ -97,20 +129,8 @@ int main(int argc, char **argv, char **envp)
             printf("exit\n");
             break ;
         }
-        if (*line && !is_only_spaces(line))
-        {
-            add_history(line);
-            result = start(&line, &m);
-            free(line);
-            if (result == -19) // dans le cas de exit
-            {
-                free_env(m.env);
-                rl_clear_history();
-                exit(g_exitcode);
-            }
-        }
-        else
-            free(line);
+        process_command_line(line, &m);
+        
     }
     free_env(m.env);
     rl_clear_history(); 
