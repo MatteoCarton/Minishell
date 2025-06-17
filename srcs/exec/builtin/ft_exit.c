@@ -90,29 +90,25 @@ static int	ft_atoi_with_overflow(const char *str, int *error)
 	return (-result);
 }
 
-int	ft_exit(char **args)
+int ft_exit(char **args)
 {
-	int	code;
-	int	error;
+    int code;
+	int error;
 
-	printf("exit\n");
-	if (!args || number_of_args(args) == 1)
-		return (-19);
-	if (!is_numeric(args[1]))
-	{
-		write(2, "minishell: exit: ", 17);
-		write(2, args[1], ft_strlen(args[1]));
-		write(2, ": numeric argument required\n", 28);
-		g_exitcode = 2;
-		return (-19);
-	}
-	if (number_of_args(args) > 2)
-	{
-		write(2, "minishell: exit: too many arguments\n", 36);
-		g_exitcode = 1;
-		return (0);
-	}
-	code = ft_atoi_with_overflow(args[1], &error);
+	code = 0;
+	error = 0;
+    printf("exit\n");
+    if (!args || number_of_args(args) == 1)
+        return (-19);
+    if (!is_numeric(args[1]))
+        return (write(2, "minishell: exit: ", 17),
+                write(2, args[1], ft_strlen(args[1])),
+                write(2, ": numeric argument required\n", 28),
+                g_exitcode = 2, -19);
+    if (number_of_args(args) > 2)
+        return (write(2, "minishell: exit: too many arguments\n", 36),
+                g_exitcode = 1, 0);
+    code = ft_atoi_with_overflow(args[1], &error);
 	if (error)
 	{
 		g_exitcode = 2;
@@ -121,3 +117,4 @@ int	ft_exit(char **args)
 	g_exitcode = (unsigned char)code;
 	return (-19);
 }
+

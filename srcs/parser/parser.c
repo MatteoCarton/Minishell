@@ -34,7 +34,7 @@ t_command *init_command(void)
     cmd->next = NULL;
     return (cmd);
 }
-//25 ligne
+
 static void arg_while(t_command **cmd, char **arg, char ***new_args)
 {
     int i;
