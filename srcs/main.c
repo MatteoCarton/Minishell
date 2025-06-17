@@ -1,4 +1,6 @@
 #include "../inc/minishell.h"
+#include <fcntl.h>
+#include <stdio.h>
 
 int g_exitcode = 0;
 
@@ -75,44 +77,73 @@ static int start(char **line, t_shell *m)
         return (0);
 }
 
-
-
-int main(int argc, char **argv, char **envp)
+static int	init_shell(t_shell *shell, char **envp)
 {
-    (void)argv;
-    char *line;
-    int result;
-    t_shell m;
-    
-    if (argc != 1)
-        return (0);
-    m.env = cpy_env(envp);
-    setup_shell_signals();
-    result = 0;
-    while (19)
-    {
-        line = readline("matteoshell$ ");
-        if (!line) // si on CTRL+D (car ca renvoie NULL)
-        {
-            printf("exit\n");
-            break ;
-        }
-        if (*line && !is_only_spaces(line))
-        {
-            add_history(line);
-            result = start(&line, &m);
-            free(line);
-            if (result == -19) // dans le cas de exit
-            {
-                free_env(m.env);
-                rl_clear_history();
-                exit(g_exitcode);
-            }
-        }
-        else
-            free(line);
-    }
-    free_env(m.env);
-    rl_clear_history(); 
-    return (g_exitcode);
+	if (!shell)
+		return (0);
+	shell->env = cpy_env(envp);
+	if (!shell->env)
+		return (0);
+	setup_shell_signals();
+	return (1);
+}
+
+static void	run_shell(t_shell *shell)
+{
+	char	*line;
+	int		result;
+	int		stdin_backup;
+	int		current_stdin;
+
+	result = 0;
+	stdin_backup = dup(STDIN_FILENO);
+	if (stdin_backup == -1)
+	{
+		perror("minishell");
+		exit(1);
+	}
+	while (19)
+	{
+		current_stdin = dup(STDIN_FILENO);
+		dup2(stdin_backup, STDIN_FILENO);
+		line = readline("matteoshell$ ");
+		dup2(current_stdin, STDIN_FILENO);
+		close(current_stdin);
+		if (!line)
+		{
+			printf("exit\n");
+			break ;
+		}
+		if (*line && !is_only_spaces(line))
+		{
+			add_history(line);
+			result = start(&line, shell);
+			free(line);
+			if (result == -19)
+			{
+				free_env(shell->env);
+				rl_clear_history();
+				close(stdin_backup);
+				exit(g_exitcode);
+			}
+		}
+		else
+			free(line);
+	}
+	free_env(shell->env);
+	rl_clear_history();
+	close(stdin_backup);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	shell;
+
+	(void)argv;
+	if (argc != 1)
+		return (0);
+	if (init_shell(&shell, envp) == 0)
+		return (1);
+	run_shell(&shell);
+	return (g_exitcode);
 }
