@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:46:41 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:15:26 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ void	wait_all_children(int n_cmd)
 	}
 }
 
-int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes,
-		int *n_cmd)
+int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes, int *n_cmd)
 {
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
@@ -58,8 +57,7 @@ int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes,
 	return (0);
 }
 
-int	fork_children(t_command *cmd, int *pipes, int n_pipes,
-		t_shell *shell)
+int	fork_children(t_command *cmd, int *pipes, t_shell *shell)
 {
 	int			i;
 	pid_t		pid;
@@ -95,7 +93,7 @@ int	exec_pipe(t_command *cmd, t_shell *shell)
 	i = 0;
 	if (init_pipe_data(cmd, &pipes, &n_pipes, &n_cmd) == 1)
 		return (1);
-	if (fork_children(cmd, pipes, n_pipes, shell) == 1)
+	if (fork_children(cmd, pipes, shell) == 1)
 		return (1);
 	while (i < n_pipes * 2)
 		close(pipes[i++]);

@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:53:26 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/17 17:08:01 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:10:57 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	word_token(char *str, t_token **head, t_token **actual, int *i)
 	}
 }
 
-static void	process_quotes(char *str, char *buff, int *i, int *j)
+void	process_quotes(char *str, char *buff, int *i, int *j)
 {
 	char	q;
 

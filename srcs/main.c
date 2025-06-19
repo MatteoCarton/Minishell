@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:12:50 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/17 16:12:51 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:22:29 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ static void	run_shell(t_shell *shell)
 		if (setup_shell_stdin(stdin_backup, &current_stdin) == -1)
 			break ;
 		line = readline("matteoshell$ ");
-		restore_shell_stdin(current_stdin, stdin_backup);
+		dup2(current_stdin, STDIN_FILENO);
+		close(current_stdin);
 		if (!line)
 		{
 			printf("exit\n");

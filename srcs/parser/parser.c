@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:33:21 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/17 16:33:22 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:09:05 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	handle_redirection(t_command *cmd, t_token *current)
 	return (1);
 }
 
-static int	parse_while(t_command **cmd, t_command **first_cmd,
+int	parse_while(t_command **cmd, t_command **first_cmd,
 		t_token **current)
 {
 	while ((*current))

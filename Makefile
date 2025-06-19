@@ -16,26 +16,41 @@ SRCS = \
 	$(SRC_PATH)/main.c \
 	$(SRC_PATH)/lexer/lexer.c \
 	$(SRC_PATH)/lexer/lexer_utils.c \
-	$(SRC_PATH)/expend/expander.c \
-	$(SRC_PATH)/expend/expander_utils.c \
+	$(SRC_PATH)/lexer/lexer_token.c \
+	$(SRC_PATH)/lexer/lexer_free.c \
+	$(SRC_PATH)/expend/expender.c \
+	$(SRC_PATH)/expend/expender_env.c \
+	$(SRC_PATH)/expend/expender_utils.c \
 	$(SRC_PATH)/parser/parser.c \
-	$(SRC_PATH)/exec/exec.c \
-	$(SRC_PATH)/exec/pipe.c \
-	$(SRC_PATH)/exec/find_path.c \
-	$(SRC_PATH)/exec/redirections.c \
+	$(SRC_PATH)/parser/parser_utils.c \
+	$(SRC_PATH)/parser/parser_free.c \
+	$(SRC_PATH)/shell/shell_utils.c \
+	$(SRC_PATH)/shell/shell_exec.c \
+	$(SRC_PATH)/signal/signal.c \
+	$(SRC_PATH)/exec/exec_utils.c \
+	$(SRC_PATH)/exec/exec_path.c \
+	$(SRC_PATH)/exec/exec_builtin.c \
+	$(SRC_PATH)/exec/exec_main.c \
+	$(SRC_PATH)/exec/exec_external.c \
+	$(SRC_PATH)/exec/exec_find_path.c \
+	$(SRC_PATH)/exec/pipe_child.c \
+	$(SRC_PATH)/exec/pipe_main.c \
+	$(SRC_PATH)/exec/pipe_utils.c \
+	$(SRC_PATH)/exec/redirections_apply.c \
+	$(SRC_PATH)/exec/redirections_out.c \
+	$(SRC_PATH)/exec/redirections_in.c \
 	$(SRC_PATH)/exec/builtin/ft_pwd.c \
 	$(SRC_PATH)/exec/builtin/ft_env.c \
 	$(SRC_PATH)/exec/builtin/ft_echo.c \
 	$(SRC_PATH)/exec/builtin/ft_exit.c \
+	$(SRC_PATH)/exec/builtin/ft_exit2.c \
 	$(SRC_PATH)/exec/builtin/ft_cd.c \
 	$(SRC_PATH)/exec/builtin/ft_cd2.c \
 	$(SRC_PATH)/exec/builtin/ft_export.c \
-	$(SRC_PATH)/exec/builtin/ft_export_utils.c \
+	$(SRC_PATH)/exec/builtin/ft_export2.c \
+	$(SRC_PATH)/exec/builtin/ft_export3.c \
 	$(SRC_PATH)/exec/builtin/ft_unset.c \
-	$(SRC_PATH)/exec/builtin/builtin_utils.c \
-	$(SRC_PATH)/signal/signal.c \
-	$(SRC_PATH)/shell/shell_utils.c \
-	$(SRC_PATH)/shell/shell_exec.c
+	$(SRC_PATH)/exec/builtin/builtin_utils.c
 
 OBJS = $(SRCS:$(SRC_PATH)/%.c=$(OBJ_PATH)/%.o)
 

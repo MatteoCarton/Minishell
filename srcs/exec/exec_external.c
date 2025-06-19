@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:35 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:21:36 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:14:35 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int	create_child_exec(char *path, t_command *cmd, t_shell *shell,
 		int stdout_backup)
 {
 	pid_t	pid;
-	int		status;
 
 	pid = fork();
 	if (pid < 0)

@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 11:06:06 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:06:07 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:17:09 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,6 @@ void						cleanup_shell_resources(t_shell *shell,
 								int stdin_backup);
 int							setup_shell_stdin(int stdin_backup,
 								int *current_stdin);
-void						restore_shell_stdin(int current_stdin,
-								int stdin_backup);
 int							process_shell_line(char *line, t_shell *shell,
 								int stdin_backup);
 
@@ -103,15 +101,15 @@ void						handle_argument(t_command *cmd, t_token *current);
 t_command					*handle_pipe(t_command *cmd);
 int							handle_redirection(t_command *cmd,
 								t_token *current);
-static int					parse_while(t_command **cmd, t_command **first_cmd,
+int							parse_while(t_command **cmd, t_command **first_cmd,
 								t_token **current);
 t_command					*parse_tokens(t_token *tokens);
 
 /* parser/parser_utils.c */
-static t_redirection		*add_redirection(t_redirection **redirection_list,
+t_redirection				*add_redirection(t_redirection **redirection_list,
 								t_token_type type, char *filename);
 t_command					*init_command(void);
-static void					arg_while(t_command **cmd, char **arg,
+void						arg_while(t_command **cmd, char **arg,
 								char ***new_args);
 void						add_argument(t_command *cmd, char *arg);
 
@@ -240,7 +238,7 @@ void						wait_all_children(int n_cmd);
 int							init_pipe_data(t_command *cmd, int **pipes,
 								int *n_pipes, int *n_cmd);
 int							fork_children(t_command *cmd, int *pipes,
-								int n_pipes, t_shell *shell);
+								t_shell *shell);
 int							exec_pipe(t_command *cmd, t_shell *shell);
 
 /* exec/pipe_child.c*/
@@ -265,7 +263,7 @@ int							handle_redir_out(t_redirection *redir);
 
 /* exec/redirections_in.c */
 int							try_open_infile(t_redirection *redir, int *fd);
-int							try_dup2_infile(int fd, t_redirection *redir);
+int							try_dup2_infile(int fd);
 int							handle_redir_in(t_redirection *redir,
 								t_redirection *last_in);
 int							handle_heredoc(const char *delimiter);

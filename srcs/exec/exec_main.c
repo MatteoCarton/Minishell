@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:21:47 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:14:12 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int	handle_simple_command(t_command *cmd, t_shell *shell)
 	int	has_output_redirection;
 	int	stdout_backup;
 
+	stdout_backup = -1;
 	has_output_redirection = check_output_redirection(cmd);
 	if (is_builtin(cmd->args[0]) && !has_output_redirection)
 		return (handle_builtin_no_redir(cmd, shell, stdout_backup));

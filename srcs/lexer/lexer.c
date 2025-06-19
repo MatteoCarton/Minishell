@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 18:00:00 by minishell42       #+#    #+#             */
-/*   Updated: 2025/06/17 16:56:46 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:10:04 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	is_valid_word(char c)
 	return (ft_isalnum(c) || c == '"' || c == '\'' || ft_strchr(EXTRA_CHAR, c));
 }
 
-static void	process_word_quotes(char *str, char *buff, int *i, int *j)
+void	process_word_quotes(char *str, char *buff, int *i, int *j)
 {
 	char	q;
 

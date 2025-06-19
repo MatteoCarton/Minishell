@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 17:02:43 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/17 17:17:35 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:11:44 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	process_char(char **str, char **new_str, t_shell g_env, int *i)
 	return (1);
 }
 
-static int	add_single_quote_char(char **str, char **new_str, int *i)
+int	add_single_quote_char(char **str, char **new_str, int *i)
 {
 	char	*tmp;
 
@@ -62,7 +62,7 @@ static int	add_single_quote_char(char **str, char **new_str, int *i)
 	return (1);
 }
 
-static int	expand_dollar_loop(char **str, char **new_str, t_shell g_env)
+int	expand_dollar_loop(char **str, char **new_str, t_shell g_env)
 {
 	int	i;
 	int	in_single;

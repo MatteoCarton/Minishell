@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 17:03:35 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/17 17:07:49 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:11:55 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*join_char(char *s, char c)
 	return (new_str);
 }
 
-static int	len(long nbr)
+int	len(long nbr)
 {
 	int	i;
 

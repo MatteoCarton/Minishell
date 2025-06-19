@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:29:27 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/17 16:39:28 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:09:25 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static t_redirection	*add_redirection(t_redirection **redirection_list,
+t_redirection	*add_redirection(t_redirection **redirection_list,
 		t_token_type type, char *filename)
 {
 	t_redirection	*new;
@@ -50,7 +50,7 @@ t_command	*init_command(void)
 	return (cmd);
 }
 
-static void	arg_while(t_command **cmd, char **arg, char ***new_args)
+void	arg_while(t_command **cmd, char **arg, char ***new_args)
 {
 	int	i;
 

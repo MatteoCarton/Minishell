@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:41:09 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:44:02 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 11:16:31 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	try_open_infile(t_redirection *redir, int *fd)
 	return (1);
 }
 
-int	try_dup2_infile(int fd, t_redirection *redir)
+int	try_dup2_infile(int fd)
 {
 	if (dup2(fd, STDIN_FILENO) < 0)
 	{
@@ -87,7 +87,7 @@ int	handle_redir_in(t_redirection *redir, t_redirection *last_in)
 		return (0);
 	if (redir == last_in)
 	{
-		if (!try_dup2_infile(fd, redir))
+		if (!try_dup2_infile(fd))
 			return (0);
 	}
 	close(fd);
