@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:33:21 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:09:05 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:27:19 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	parse_while(t_command **cmd, t_command **first_cmd,
 		else if ((*current)->type == PIPE)
 		{
 			if (!(*current)->next || (*current)->next->type == PIPE)
-				return (write(2, "minishell: syntax error\n", 24),
+				return (write(2, "matteoshell: syntax error\n", 26),
 					free_command((*first_cmd)), 1);
 			(*cmd) = handle_pipe((*cmd));
 			if (!(*cmd))
@@ -75,7 +75,7 @@ t_command	*parse_tokens(t_token *tokens)
 	if (!tokens)
 		return (NULL);
 	if (tokens->type == PIPE)
-		return (write(2, "minishell: syntax error\n", 24), NULL);
+		return (write(2, "matteoshell: syntax error\n", 26), NULL);
 	first_cmd = init_command();
 	cmd = first_cmd;
 	current = tokens;

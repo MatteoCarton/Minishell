@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:49 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 12:14:20 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:24:19 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	execute_child_builtin_or_cmd(t_command *cmd, t_shell *shell)
 		exit(127);
 	}
 	execve(path, cmd->args, shell->env);
-	perror("minishell: execve");
+	perror("matteoshell: execve");
 	free(path);
 	exit(EXIT_FAILURE);
 }

@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:55 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 12:15:30 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:30:00 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	has_pipe(t_command *cmd)
 
 char	*handle_command_not_found(char *cmd)
 {
-	write(2, "minishell: ", 11);
+	write(2, "matteoshell: ", 13);
 	write(2, cmd, ft_strlen(cmd));
 	write(2, ": command not found\n", 20);
 	g_exitcode = 127;

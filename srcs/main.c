@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:12:50 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 12:05:07 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:22:19 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	run_shell(t_shell *shell)
 	stdin_backup = dup(STDIN_FILENO);
 	if (stdin_backup == -1)
 	{
-		perror("minishell");
+		perror("matteoshell");
 		exit(1);
 	}
 	while (19)

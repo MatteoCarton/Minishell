@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 12:18:39 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:24:23 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	fork_children(t_command *cmd, int *pipes, t_shell *shell)
 		pid = fork();
 		if (pid < 0)
 		{
-			perror("minishell: fork");
+			perror("matteoshell: fork");
 			g_exitcode = 1;
 			free(pipes);
 			return (1);

@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:41:09 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:16:31 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:25:23 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	handle_heredoc(const char *delimiter)
 
 	if (pipe(pipefd) == -1)
 	{
-		write(2, "minishell: pipe error\n", 22);
+		write(2, "matteoshell: pipe error\n", 24);
 		return (-1);
 	}
 	delimiter_length = ft_strlen(delimiter);
@@ -56,7 +56,7 @@ int	try_open_infile(t_redirection *redir, int *fd)
 	*fd = open(redir->filename, O_RDONLY);
 	if (*fd < 0)
 	{
-		write(2, "minishell: ", 11);
+		write(2, "matteoshell: ", 13);
 		write(2, redir->filename, ft_strlen(redir->filename));
 		write(2, ": ", 2);
 		perror("");
@@ -70,7 +70,7 @@ int	try_dup2_infile(int fd)
 {
 	if (dup2(fd, STDIN_FILENO) < 0)
 	{
-		write(2, "minishell: ", 11);
+		write(2, "matteoshell: ", 13);
 		perror("dup2");
 		close(fd);
 		g_exitcode = 1;

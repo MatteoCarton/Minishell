@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:35 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:14:35 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:23:51 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	exec_child_process(char *path, t_command *cmd, t_shell *shell)
 {
 	execve(path, cmd->args, shell->env);
-	perror("minishell");
+	perror("matteoshell");
 	exit(127);
 }
 
@@ -45,7 +45,7 @@ int	create_child_exec(char *path, t_command *cmd, t_shell *shell,
 	pid = fork();
 	if (pid < 0)
 	{
-		perror("minishell: fork");
+		perror("matteoshell: fork");
 		g_exitcode = 1;
 		free(path);
 		dup2(stdout_backup, STDOUT_FILENO);
