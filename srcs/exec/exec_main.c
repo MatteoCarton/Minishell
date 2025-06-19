@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:14:12 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:23:57 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	prepare_command_execution(t_command *cmd, t_shell *shell,
 	*stdout_backup = dup(STDOUT_FILENO);
 	if (*stdout_backup == -1)
 	{
-		perror("minishell");
+		perror("matteoshell");
 		return (1);
 	}
 	if (!setup_external_exec(cmd, shell, path))
@@ -51,7 +51,7 @@ int	handle_builtin_no_redir(t_command *cmd, t_shell *shell, int stdout_backup)
 	stdout_backup = dup(STDOUT_FILENO);
 	if (stdout_backup == -1)
 	{
-		perror("minishell");
+		perror("matteoshell");
 		return (1);
 	}
 	if (!exec_redirections(cmd))

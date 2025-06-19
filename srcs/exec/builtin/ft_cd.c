@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:50:32 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:57:39 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:25:59 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	change_directory(char *arg1, t_shell *shell)
 	old_pwd = update_old_pwd_env(shell->env);
 	if (chdir(arg1) == -1)
 	{
-		perror("minishell: cd");
+		perror("matteoshell: cd");
 		g_exitcode = 1;
 		return ;
 	}
@@ -37,7 +37,7 @@ void	ft_cd(char **args, t_shell *shell)
 
 	if (number_of_args(args) > 2)
 	{
-		write(2, "minishell: cd: too many arguments\n", 34);
+		write(2, "matteoshell: cd: too many arguments\n", 36);
 		g_exitcode = 1;
 		return ;
 	}
@@ -46,7 +46,7 @@ void	ft_cd(char **args, t_shell *shell)
 		home_path = getenv("HOME");
 		if (!home_path)
 		{
-			write(2, "minishell: cd: HOME not set\n", 28);
+			write(2, "matteoshell: cd: HOME not set\n", 30);
 			g_exitcode = 1;
 			return ;
 		}

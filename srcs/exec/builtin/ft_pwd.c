@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:54:52 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:54:54 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:26:54 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,5 @@ void	ft_pwd(void)
 	if (getcwd(buffer, PATH_MAX))
 		printf("%s\n", buffer);
 	else
-		perror("minishell: pwd (getcwd)");
+		perror("matteoshell: pwd (getcwd)");
 }

@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 11:06:06 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 12:14:00 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 01:30:23 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ typedef struct s_command
 }							t_command;
 
 /* main.c */
-int							is_only_spaces(char *str);
 char						**cpy_env(char **envp);
 
 /* shell/shell_utils.c */
@@ -85,6 +84,7 @@ int							setup_shell_stdin(int stdin_backup,
 								int *current_stdin);
 int							process_shell_line(char *line, t_shell *shell,
 								int stdin_backup);
+int							is_only_spaces(char *str);
 
 /* shell/shell_exec.c */
 int							start(char **line, t_shell *m);
@@ -234,11 +234,9 @@ char						*find_command_path(char *cmd, char **env);
 void						free_tab(char **tab);
 
 /* exec/pipe_main.c*/
-void						wait_all_children(int n_cmd);
-int							init_pipe_data(t_command *cmd, int **pipes,
-								int *n_pipes, int *n_cmd);
+void						wait_all_children(int n_cmd, pid_t *pids);
 int							fork_children(t_command *cmd, int *pipes,
-								t_shell *shell);
+								t_shell *shell, pid_t *pids);
 int							exec_pipe(t_command *cmd, t_shell *shell);
 
 /* exec/pipe_child.c*/
@@ -254,6 +252,9 @@ void						setup_pipe_redirections(int *pipes, int index,
 								int n_pipes);
 int							alloc_pipe_array(int **pipes, int n_pipes);
 int							create_pipes(int *pipes, int n_pipes);
+
+int							init_pipe_data(t_command *cmd, int **pipes,
+								int *n_pipes, int *n_cmd);
 
 /* exec/redirections_out.c */
 int							open_outfile(const char *output_file,

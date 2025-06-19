@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:32 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:22:13 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:23:36 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	create_builtin_process(t_command *cmd, t_shell *shell)
 	pid = fork();
 	if (pid < 0)
 	{
-		perror("minishell: fork");
+		perror("matteoshell: fork");
 		g_exitcode = 1;
 		return (-1);
 	}
@@ -101,7 +101,7 @@ int	prepare_builtin_execution(t_command *cmd, int *stdout_backup)
 	*stdout_backup = dup(STDOUT_FILENO);
 	if (*stdout_backup == -1)
 	{
-		perror("minishell");
+		perror("matteoshell");
 		return (0);
 	}
 	if (!exec_redirections(cmd))

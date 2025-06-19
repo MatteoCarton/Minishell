@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:41:08 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:44:11 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:25:38 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	try_open_outfile(t_redirection *redir, int *fd)
 	*fd = open_outfile(redir->filename, append_flag);
 	if (*fd < 0)
 	{
-		write(2, "minishell: ", 11);
+		write(2, "matteoshell: ", 13);
 		write(2, redir->filename, ft_strlen(redir->filename));
 		write(2, ": ", 2);
 		perror("");
@@ -51,7 +51,7 @@ int	handle_redir_out(t_redirection *redir)
 		return (0);
 	if (dup2(fd, STDOUT_FILENO) < 0)
 	{
-		write(2, "minishell: ", 11);
+		write(2, "matteoshell: ", 13);
 		perror("dup2");
 		close(fd);
 		g_exitcode = 1;

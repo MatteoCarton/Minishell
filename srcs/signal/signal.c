@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:25:47 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 12:19:56 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 01:16:54 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	handle_sigint(int signal)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-	g_exitcode = 130;
+	g_exitcode = 1;
 }
 
 static void	handle_sigint_child(int signal)

@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:44 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:45:54 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 01:30:32 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	alloc_pipe_array(int **pipes, int n_pipes)
 	*pipes = malloc(sizeof(int) * n_pipes * 2);
 	if (!*pipes)
 	{
-		perror("minishell: malloc");
+		perror("matteoshell: malloc");
 		g_exitcode = 1;
 		return (1);
 	}
@@ -65,11 +65,27 @@ int	create_pipes(int *pipes, int n_pipes)
 	{
 		if (pipe(&pipes[i * 2]) == -1)
 		{
-			perror("minishell: pipe");
+			perror("matteoshell: pipe");
 			g_exitcode = 1;
 			return (1);
 		}
 		i++;
+	}
+	return (0);
+}
+
+int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes, int *n_cmd)
+{
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (1);
+	*n_pipes = count_pipes(cmd);
+	*n_cmd = *n_pipes + 1;
+	if (alloc_pipe_array(pipes, *n_pipes))
+		return (1);
+	if (create_pipes(*pipes, *n_pipes))
+	{
+		free(*pipes);
+		return (1);
 	}
 	return (0);
 }

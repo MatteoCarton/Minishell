@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:39:01 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:44:21 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:24:43 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,14 @@ int	handle_redir_heredoc(t_redirection *redir)
 	fd = redir->heredoc_fd;
 	if (fd < 0)
 	{
-		write(2, "minishell: heredoc: ", 20);
+		write(2, "matteoshell: heredoc: ", 22);
 		perror("");
 		g_exitcode = 1;
 		return (0);
 	}
 	if (dup2(fd, STDIN_FILENO) < 0)
 	{
-		write(2, "minishell: ", 11);
+		write(2, "matteoshell: ", 13);
 		perror("dup2");
 		close(fd);
 		g_exitcode = 1;

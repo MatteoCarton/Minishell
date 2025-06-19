@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:53:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 12:44:25 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 01:34:22 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	overflow_positive(long long result, int digit, const char *str)
 	if (result > LLONG_MAX / 10 || (result == LLONG_MAX / 10
 			&& digit > LLONG_MAX % 10))
 	{
-		write(2, "minishell: exit: ", 17);
+		write(2, "matteoshell: exit: ", 19);
 		write(2, str, ft_strlen(str));
 		write(2, ": numeric argument required\n", 28);
 		return (1);
@@ -32,7 +32,7 @@ int	overflow_negative(long long result, int digit, const char *str)
 			&& (unsigned long long)digit > ((unsigned long long)LLONG_MAX % 10
 				+ 1)))
 	{
-		write(2, "minishell: exit: ", 17);
+		write(2, "matteoshell: exit: ", 19);
 		write(2, str, ft_strlen(str));
 		write(2, ": numeric argument required\n", 28);
 		return (1);
@@ -55,7 +55,7 @@ int	handle_exit_errors(char **args)
 		return (-19);
 	if (!is_numeric(args[1]))
 	{
-		write(2, "minishell: exit: ", 17);
+		write(2, "matteoshell: exit: ", 19);
 		write(2, args[1], ft_strlen(args[1]));
 		write(2, ": numeric argument required\n", 28);
 		g_exitcode = 2;
@@ -63,7 +63,7 @@ int	handle_exit_errors(char **args)
 	}
 	if (number_of_args(args) > 2)
 	{
-		write(2, "minishell: exit: too many arguments\n", 36);
+		write(2, "matteoshell: exit: too many arguments\n", 38);
 		g_exitcode = 1;
 		return (0);
 	}

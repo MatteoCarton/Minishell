@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 10:21:49 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:22:53 by mcarton          ###   ########.fr       */
+/*   Created: 2025/06/19 16:51:37 by mcarton           #+#    #+#             */
+/*   Updated: 2025/06/19 23:30:23 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	print_file_error(const char *path, const char *error_msg)
 {
-	write(2, "minishell: ", 11);
+	write(2, "matteoshell: ", 13);
 	write(2, path, ft_strlen(path));
 	write(2, error_msg, ft_strlen(error_msg));
 }

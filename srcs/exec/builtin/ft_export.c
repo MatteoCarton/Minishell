@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:54:49 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:59:24 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 17:26:49 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	export_with_args(char **arg, char ***env, int *exit)
 		if (!check)
 		{
 			local_exit = 1;
-			write(2, "minishell: export: '", 20);
+			write(2, "matteoshell: export: '", 22);
 			write(2, arg[i], ft_strlen(arg[i]));
 			write(2, "' : not a valid identifier\n", 27);
 		}

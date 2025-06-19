@@ -6,24 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:12:50 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 12:43:22 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 01:33:56 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 int			g_exitcode = 0;
-
-int	is_only_spaces(char *str)
-{
-	while (*str)
-	{
-		if (*str != ' ' && *str != '\t' && *str != '\n')
-			return (0);
-		str++;
-	}
-	return (1);
-}
 
 char	**cpy_env(char **envp)
 {
@@ -64,32 +53,41 @@ static int	init_shell(t_shell *shell, char **envp)
 	return (1);
 }
 
-static void	run_shell(t_shell *shell)
+static int	handle_shell_input(t_shell *shell, int stdin_backup,
+		int *current_stdin)
 {
 	char	*line;
+
+	if (setup_shell_stdin(stdin_backup, current_stdin) == -1)
+		return (0);
+	dup2(stdin_backup, STDIN_FILENO);
+	line = readline("matteoshell$ ");
+	dup2(*current_stdin, STDIN_FILENO);
+	close(*current_stdin);
+	if (!line)
+	{
+		printf("exit\n");
+		return (0);
+	}
+	process_shell_line(line, shell, stdin_backup);
+	return (1);
+}
+
+static void	run_shell(t_shell *shell)
+{
 	int		stdin_backup;
 	int		current_stdin;
 
 	stdin_backup = dup(STDIN_FILENO);
 	if (stdin_backup == -1)
 	{
-		perror("minishell");
+		perror("matteoshell");
 		exit(1);
 	}
 	while (19)
 	{
-		if (setup_shell_stdin(stdin_backup, &current_stdin) == -1)
+		if (!handle_shell_input(shell, stdin_backup, &current_stdin))
 			break ;
-        dup2(stdin_backup, STDIN_FILENO);
-		line = readline("matteoshell$ ");
-		dup2(current_stdin, STDIN_FILENO);
-		close(current_stdin);
-		if (!line)
-		{
-			printf("exit\n");
-			break ;
-		}
-		process_shell_line(line, shell, stdin_backup);
 	}
 	cleanup_shell_resources(shell, stdin_backup);
 }

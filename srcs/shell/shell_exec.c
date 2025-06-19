@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:13:08 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/17 16:17:23 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 23:46:27 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@ int	handle_command(t_command *cmd, t_shell *m, t_token *lexed)
 	int	result;
 
 	result = exec(cmd, m);
-	free_command(cmd);
 	if (result == -19)
 	{
 		free_token(&lexed);
+		free_command(cmd);
 		return (-19);
 	}
+	free_command(cmd);
 	return (1);
 }
 
@@ -34,12 +35,12 @@ int	handle_tokens(t_token *lexed, t_shell *m)
 	cmd = parse_tokens(lexed);
 	if (!cmd)
 	{
-		free_command(cmd);
 		free_token(&lexed);
 		return (1);
 	}
 	result = handle_command(cmd, m, lexed);
-	free_token(&lexed);
+	if (result != -19)
+		free_token(&lexed);
 	return (result);
 }
 
