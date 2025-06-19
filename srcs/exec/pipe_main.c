@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 23:30:15 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 00:22:11 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,11 @@ int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes, int *n_cmd)
 	return (0);
 }
 
-static int	handle_child_process(t_command *current, int *pipes, int i,
+static int	handle_fork_process(t_command *current, int *pipes, int i,
 		t_shell *shell)
 {
 	pid_t	pid;
-	int		n_pipes;
 
-	n_pipes = count_pipes(current);
 	pid = fork();
 	if (pid < 0)
 	{
@@ -74,10 +72,6 @@ static int	handle_child_process(t_command *current, int *pipes, int i,
 	}
 	if (pid == 0)
 		execute_child_pipe(current, pipes, i, shell);
-	if (i > 0)
-		close(pipes[(i - 1) * 2]);
-	if (i < n_pipes)
-		close(pipes[i * 2 + 1]);
 	return (0);
 }
 
@@ -85,13 +79,19 @@ int	fork_children(t_command *cmd, int *pipes, t_shell *shell)
 {
 	int			i;
 	t_command	*current;
+	int			n_pipes;
 
 	i = 0;
 	current = cmd;
+	n_pipes = count_pipes(cmd);
 	while (current)
 	{
-		if (handle_child_process(current, pipes, i, shell))
+		if (handle_fork_process(current, pipes, i, shell))
 			return (1);
+		if (i > 0)
+			close(pipes[(i - 1) * 2]);
+		if (i < n_pipes)
+			close(pipes[i * 2 + 1]);
 		current = current->next;
 		i++;
 	}
