@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_export3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 10:54:52 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:54:54 by mcarton          ###   ########.fr       */
+/*   Created: 2025/06/19 10:57:11 by mcarton           #+#    #+#             */
+/*   Updated: 2025/06/19 11:01:03 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
 
-void	ft_pwd(void)
+int	valid_env(char *str)
 {
-	char	buffer[PATH_MAX];
+	int	i;
 
-	if (getcwd(buffer, PATH_MAX))
-		printf("%s\n", buffer);
-	else
-		perror("minishell: pwd (getcwd)");
+	i = 0;
+	if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
+		return (0);
+	while (str[i] && str[i] != '=')
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
 }

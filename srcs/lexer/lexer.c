@@ -6,123 +6,36 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 18:00:00 by minishell42       #+#    #+#             */
-/*   Updated: 2025/06/16 18:48:36 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/17 16:56:46 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-/*pipe token on cree et on ajt a la liste*/
-void    pipe_token(char *line,t_token **head, t_token **actual, int *i)
+/*dans la fonction handle quotes juste gerer les char*/
+int	is_valid_word(char c)
 {
-    t_token *new;
-
-    if ((line[*i]) == '|')
-    {
-        new = create_token(PIPE, "|");
-        add_token(head, actual, new);
-        (*i)++;
-    }
-}
-/*redirect token, on cree et on ajt a la liste*/
-static t_token *handle_redirect_in(char *str, int *i)
-{
-    if (str[*i] == '<')
-    {
-        if (str[*i + 1] == '<')
-        {
-            (*i) += 2;
-            return (create_token(HEREDOC, "<<"));
-        }
-        else
-        {
-            (*i)++;
-            return (create_token(IN, "<"));
-        }
-    }
-    return (NULL);
+	return (ft_isalnum(c) || c == '"' || c == '\'' || ft_strchr(EXTRA_CHAR, c));
 }
 
-static t_token *handle_redirect_out(char *str, int *i)
+static void	process_word_quotes(char *str, char *buff, int *i, int *j)
 {
-    if (str[*i] == '>')
-    {
-        if (str[*i + 1] == '>')
-        {
-            (*i) += 2;
-            return (create_token(APPEND, ">>"));
-        }
-        else
-        {
-            (*i)++;
-            return (create_token(OUT, ">"));
-        }
-    }
-    return (NULL);
+	char	q;
+
+	if (str[*i] == '\'' || str[*i] == '"')
+	{
+		q = str[*i];
+		(*i)++;
+		while (str[*i] && str[*i] != q && *j < 4095)
+			buff[(*j)++] = str[(*i)++];
+		if (str[*i] == q)
+			(*i)++;
+	}
+	else
+		buff[(*j)++] = str[(*i)++];
 }
 
-void in_out_token(char *str, t_token **head, t_token **actual, int *i)
-{
-    t_token *new;
-
-    new = handle_redirect_in(str, i);
-    if (!new)
-        new = handle_redirect_out(str, i);
-    if (new)
-        add_token(head, actual, new);
-}
-/*on gere les guillemet char buff qui prendra les info dans les quotes grande taille pour gerer un max d erreur sinon 
-peut etre opti avec un realloc mais flemme, on met dans le buff tout ce qu il y a dedans si on rencontre pipe redirect ou space
-on break , marque la fin puis on cree le token et on ajt a la liste*/
-//26 ligne
-void    quotes_token(char *str, t_token **head, t_token **actual, int *i)
-{
-    t_token *new;
-    char buff[4096];
-    int j;
-    char q;
-
-    j = 0;
-    while(str[*i])
-    {
-        if (str[*i] == '"' || str[*i] == '\'')
-        {
-            q = str[*i];
-            (*i)++;
-            while(str[*i] && str[*i] != q && j < 4095)
-                buff[j++] = str[(*i)++];
-            if (str[*i] == q)
-                (*i)++;
-        }
-        else if (str[*i] == 32 || str[*i] == '<'
-            || str[*i] == '>' || str[*i] == '|')
-            break;
-        else
-            buff[j++] = str[(*i)++];
-    }
-    buff[j] = '\0';
-    new = create_token(WORD, buff);
-    add_token(head, actual, new);
-}
-/*le reste on check si c est des char valide puis on extrait et on met dans word
-ensuite on cree le token et on l ajoute a la liste puis free car substr*/
-void    other_token(char *str, t_token **head, t_token **actual, int *i)
-{
-    t_token *new;
-    int begun;
-    char *word;
-
-    begun = *i;
-    while (str[*i] && is_valid_word(str[*i]))
-        (*i)++;
-    if(!(word = ft_substr(str, begun, *i - begun)))
-        return;
-    new = create_token(WORD, word);
-    add_token(head, actual, new);
-    free(word);
-}
-
-void    check_token(char *line, t_token **head, t_token **actual, int *i)
+void	check_token(char *line, t_token **head, t_token **actual, int *i)
 {
 	while (line[*i])
 	{
@@ -136,19 +49,34 @@ void    check_token(char *line, t_token **head, t_token **actual, int *i)
 			word_token(line, head, actual, i);
 	}
 }
-/*init une tete de list et le pos actuel ensuite on parcour toute la ligne
-skip les espace on cree des token pour chaque char check si c est un pipe, redirection
-guillemet et le reste sera word*/
-t_token *get_token(char *line)
-{
-    int i;
-    t_token *head;
-    t_token *actual;
 
-    i = 0;
-    head = NULL;
-    actual = NULL;
-    check_token(line, &head, &actual, &i);
-    //printoken(head);
-    return(head);
+/*on cree token malloc size de la struct puis on dup str ,
+	def le type et set le next a NUll
+puis on return*/
+t_token	*create_token(t_token_type type, char *str)
+{
+	t_token	*new;
+
+	new = malloc(sizeof(t_token));
+	if (!new)
+		return (NULL);
+	new->str = ft_strdup(str);
+	if (!new->str)
+		return (free(new), NULL);
+	new->type = type;
+	new->next = NULL;
+	return (new);
+}
+
+t_token	*get_token(char *line)
+{
+	int		i;
+	t_token	*head;
+	t_token	*actual;
+
+	i = 0;
+	head = NULL;
+	actual = NULL;
+	check_token(line, &head, &actual, &i);
+	return (head);
 }

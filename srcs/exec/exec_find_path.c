@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_find_path.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/19 10:20:42 by mcarton           #+#    #+#             */
+/*   Updated: 2025/06/19 10:20:43 by mcarton          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minishell.h"
 
 void	free_tab(char **tab)
@@ -18,8 +30,8 @@ void	free_tab(char **tab)
 static char	*build_path(char *dir, char *cmd)
 {
 	char	*full;
-	int	dir_len;
-	int	cmd_len;
+	int		dir_len;
+	int		cmd_len;
 
 	dir_len = ft_strlen(dir);
 	cmd_len = ft_strlen(cmd);
@@ -35,7 +47,7 @@ static char	*build_path(char *dir, char *cmd)
 static char	*search_in_path(char **path_array, char *cmd)
 {
 	char	*test_path;
-	int	j;
+	int		j;
 
 	j = 0;
 	while (path_array[j])

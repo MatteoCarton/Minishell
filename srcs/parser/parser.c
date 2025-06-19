@@ -1,195 +1,85 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/17 16:33:21 by mcarton           #+#    #+#             */
+/*   Updated: 2025/06/17 16:33:22 by mcarton          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minishell.h"
 
-static t_redirection *add_redirection(t_redirection **redirection_list, t_token_type type, char *filename)
+void	handle_argument(t_command *cmd, t_token *current)
 {
-    t_redirection *new;
-    t_redirection *tmp;
-
-    new = malloc(sizeof(t_redirection));
-    if (!new)
-        return (NULL);
-    new->type = type;
-    new->filename = ft_strdup(filename);
-    new->heredoc_fd = -1;
-    new->next = NULL;
-    if (!*redirection_list)
-        *redirection_list = new;
-    else
-    {
-        tmp = *redirection_list;
-        while (tmp->next)
-            tmp = tmp->next;
-        tmp->next = new;
-    }
-    return (new);
+	add_argument(cmd, current->str);
 }
 
-t_command *init_command(void)
+t_command	*handle_pipe(t_command *cmd)
 {
-    t_command *cmd = malloc(sizeof(t_command));
-    if (!cmd)
-        return (NULL);
-    cmd->args = NULL;
-    cmd->redirection = NULL;
-    cmd->next = NULL;
-    return (cmd);
-}
-//25 ligne
-static void arg_while(t_command **cmd, char **arg, char ***new_args)
-{
-    int i;
-
-    i = 0;
-    while ((*cmd)->args && (*cmd)->args[i])
-    {
-        (*new_args)[i] = ft_strdup((*cmd)->args[i]);
-        if (!(*new_args)[i])
-        {
-            while (--i >= 0)
-                free((*new_args)[i]);
-            free(*new_args);
-            free_command(*cmd);
-            return ;
-        }
-        i++;
-    }
-    (*new_args)[i] = ft_strdup(*arg);
-    if (!(*new_args)[i])
-    {
-        while (--i >= 0)
-            free(*new_args[i]);
-        free(*new_args);
-        free_command(*cmd);
-        return ;
-    }
+	cmd->next = init_command();
+	if (!cmd->next)
+		return (NULL);
+	cmd = cmd->next;
+	return (cmd);
 }
 
-void add_argument(t_command *cmd, char *arg)
+int	handle_redirection(t_command *cmd, t_token *current)
 {
-    int i;
-    char **new_args;
-    int j;
+	t_token	*next;
 
-    i = 0;
-    while (cmd->args && cmd->args[i])
-        i++;
-    new_args = ft_calloc(sizeof(char *), i + 2); // +2 pour le nouvel arg et le NULL
-    if (!new_args)
-    {
-        free_command(cmd);
-        return ;
-    }
-    arg_while(&cmd, &arg, &new_args);
-    j = 0;
-    if (cmd->args)
-    {
-        while (cmd->args[j])
-        {
-            free(cmd->args[j]);
-            j++;
-        }
-        free(cmd->args);
-    }
-    cmd->args = new_args;
+	next = current->next;
+	if (!next || next->type != WORD)
+		return (0);
+	if (!add_redirection(&cmd->redirection, current->type, next->str))
+		return (0);
+	return (1);
 }
 
-void free_redirections(t_redirection *redir)
+static int	parse_while(t_command **cmd, t_command **first_cmd,
+		t_token **current)
 {
-    t_redirection *tmp;
-    while (redir)
-    {
-        tmp = redir->next;
-        if (redir->filename)
-            free(redir->filename);
-        free(redir);
-        redir = tmp;
-    }
+	while ((*current))
+	{
+		if ((*current)->type == WORD)
+			handle_argument((*cmd), (*current));
+		else if ((*current)->type == PIPE)
+		{
+			if (!(*current)->next || (*current)->next->type == PIPE)
+				return (write(2, "minishell: syntax error\n", 24),
+					free_command((*first_cmd)), 1);
+			(*cmd) = handle_pipe((*cmd));
+			if (!(*cmd))
+				return (free_command((*first_cmd)), 1);
+		}
+		else if ((*current)->type == IN || (*current)->type == OUT
+			|| (*current)->type == APPEND || (*current)->type == HEREDOC)
+		{
+			if (!handle_redirection((*cmd), (*current)))
+				return (free_command((*first_cmd)), 1);
+			(*current) = (*current)->next;
+		}
+		(*current) = (*current)->next;
+	}
+	return (0);
 }
 
-void free_command(t_command *cmd)
+t_command	*parse_tokens(t_token *tokens)
 {
-    int i;
-    if (!cmd)
-        return ;
-    if (cmd->args)
-    {
-        i = 0;
-        while (cmd->args[i])
-        {
-            free(cmd->args[i]);
-            i++;
-        }
-        free(cmd->args);
-    }
-    if (cmd->redirection)
-        free_redirections(cmd->redirection);
-    if (cmd->next)
-        free_command(cmd->next);
-    free(cmd);
-}
+	t_command	*first_cmd;
+	t_command	*cmd;
+	t_token		*current;
 
-void handle_argument(t_command *cmd, t_token *current)
-{
-    add_argument(cmd, current->str);
-}
-
-t_command *handle_pipe(t_command *cmd)
-{
-    cmd->next = init_command();
-    if (!cmd->next)
-        return (NULL);
-    cmd = cmd->next;
-    return (cmd);
-}
-
-int handle_redirection(t_command *cmd, t_token *current)
-{
-    t_token *next = current->next;
-    if (!next || next->type != WORD)
-        return (0);
-    if (!add_redirection(&cmd->redirection, current->type, next->str))
-        return (0);
-    return (1);
-}
-static int parse_while(t_command **cmd, t_command **first_cmd, t_token **current)
-{
-    while ((*current))
-    {
-        if ((*current)->type == WORD)
-            handle_argument((*cmd), (*current));
-        else if ((*current)->type == PIPE)
-        {
-            if (!(*current)->next || (*current)->next->type == PIPE)// Erreur : pipe à la fin ou double pipe
-                return (write(2, "minishell: syntax error\n", 24),free_command((*first_cmd)), 1);
-            (*cmd) = handle_pipe((*cmd));
-            if (!(*cmd))
-                return (free_command((*first_cmd)), 1);
-        }
-        else if ((*current)->type == IN || (*current)->type == OUT || 
-                 (*current)->type == APPEND || (*current)->type == HEREDOC)
-        {
-            if (!handle_redirection((*cmd), (*current)))
-                return (free_command((*first_cmd)), 1);
-            (*current) = (*current)->next;
-        }
-        (*current) = (*current)->next;
-    }
-    return (0);
-}
-
-t_command *parse_tokens(t_token *tokens)
-{
-    t_command *first_cmd;
-    t_command *cmd;
-    t_token *current;
-    if (!tokens)
-        return (NULL);
-    if (tokens->type == PIPE)
-        return (write(2, "minishell: syntax error\n", 24), NULL);
-    first_cmd = init_command();
-    cmd = first_cmd;
-    current = tokens;
-    if (parse_while(&cmd, &first_cmd, &current) == 1)
-        return (NULL);
-    return (first_cmd);
+	if (!tokens)
+		return (NULL);
+	if (tokens->type == PIPE)
+		return (write(2, "minishell: syntax error\n", 24), NULL);
+	first_cmd = init_command();
+	cmd = first_cmd;
+	current = tokens;
+	if (parse_while(&cmd, &first_cmd, &current) == 1)
+		return (NULL);
+	return (first_cmd);
 }

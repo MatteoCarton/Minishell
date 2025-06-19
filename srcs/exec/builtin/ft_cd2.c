@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/19 10:50:44 by mcarton           #+#    #+#             */
+/*   Updated: 2025/06/19 10:57:35 by mcarton          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../inc/minishell.h"
 
-static void	update_env_var(char **env, const char *name, const char *value)
+void	update_env_var(char **env, const char *name, const char *value)
 {
 	size_t	i;
 	size_t	len;
@@ -49,8 +61,8 @@ char	*update_old_pwd_env(char **env)
 
 int	update_new_pwd_env(char **env, const char *old_pwd, const char *path)
 {
-	char *new_pwd;
-	size_t total_len;
+	char	*new_pwd;
+	size_t	total_len;
 
 	if (path[0] == '/')
 		new_pwd = ft_strdup(path);

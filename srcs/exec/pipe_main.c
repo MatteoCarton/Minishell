@@ -1,0 +1,105 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe_main.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/19 10:33:46 by mcarton           #+#    #+#             */
+/*   Updated: 2025/06/19 10:46:41 by mcarton          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../inc/minishell.h"
+
+void	wait_all_children(int n_cmd)
+{
+	int		status;
+	int		i;
+	pid_t	current_pid;
+
+	i = 0;
+	while (i < n_cmd)
+	{
+		current_pid = wait(&status);
+		if (current_pid > 0)
+		{
+			if (i == n_cmd - 1)
+			{
+				if (WIFEXITED(status))
+					g_exitcode = WEXITSTATUS(status);
+				else if (WIFSIGNALED(status))
+				{
+					if (WTERMSIG(status) == SIGPIPE)
+						g_exitcode = 0;
+					else
+						g_exitcode = 128 + WTERMSIG(status);
+				}
+			}
+		}
+		i++;
+	}
+}
+
+int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes,
+		int *n_cmd)
+{
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (1);
+	*n_pipes = count_pipes(cmd);
+	*n_cmd = *n_pipes + 1;
+	if (alloc_pipe_array(pipes, *n_pipes))
+		return (1);
+	if (create_pipes(*pipes, *n_pipes))
+	{
+		free(*pipes);
+		return (1);
+	}
+	return (0);
+}
+
+int	fork_children(t_command *cmd, int *pipes, int n_pipes,
+		t_shell *shell)
+{
+	int			i;
+	pid_t		pid;
+	t_command	*current;
+
+	i = 0;
+	current = cmd;
+	while (current)
+	{
+		pid = fork();
+		if (pid < 0)
+		{
+			perror("minishell: fork");
+			g_exitcode = 1;
+			free(pipes);
+			return (1);
+		}
+		if (pid == 0)
+			execute_child_pipe(current, pipes, i, shell);
+		current = current->next;
+		i++;
+	}
+	return (0);
+}
+
+int	exec_pipe(t_command *cmd, t_shell *shell)
+{
+	int	*pipes;
+	int	n_pipes;
+	int	n_cmd;
+	int	i;
+
+	i = 0;
+	if (init_pipe_data(cmd, &pipes, &n_pipes, &n_cmd) == 1)
+		return (1);
+	if (fork_children(cmd, pipes, n_pipes, shell) == 1)
+		return (1);
+	while (i < n_pipes * 2)
+		close(pipes[i++]);
+	wait_all_children(n_cmd);
+	free(pipes);
+	return (g_exitcode);
+}

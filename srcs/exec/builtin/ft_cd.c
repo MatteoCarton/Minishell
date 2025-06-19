@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/19 10:50:32 by mcarton           #+#    #+#             */
+/*   Updated: 2025/06/19 10:57:39 by mcarton          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../inc/minishell.h"
 
-static void	change_directory(char *arg1, t_shell *shell)
+void	change_directory(char *arg1, t_shell *shell)
 {
-    char *old_pwd;
+	char	*old_pwd;
 
-    old_pwd = update_old_pwd_env(shell->env);
+	old_pwd = update_old_pwd_env(shell->env);
 	if (chdir(arg1) == -1)
 	{
 		perror("minishell: cd");
 		g_exitcode = 1;
 		return ;
 	}
-    if (update_new_pwd_env(shell->env, old_pwd, arg1) == 1)
+	if (update_new_pwd_env(shell->env, old_pwd, arg1) == 1)
 	{
 		g_exitcode = 1;
 		return ;
@@ -21,7 +33,8 @@ static void	change_directory(char *arg1, t_shell *shell)
 
 void	ft_cd(char **args, t_shell *shell)
 {
-	char *home_path;
+	char	*home_path;
+
 	if (number_of_args(args) > 2)
 	{
 		write(2, "minishell: cd: too many arguments\n", 34);
@@ -40,5 +53,5 @@ void	ft_cd(char **args, t_shell *shell)
 		change_directory(home_path, shell);
 	}
 	else
-        change_directory(args[1], shell);
+		change_directory(args[1], shell);
 }

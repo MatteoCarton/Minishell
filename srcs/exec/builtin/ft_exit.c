@@ -1,101 +1,56 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/19 10:53:46 by mcarton           #+#    #+#             */
+/*   Updated: 2025/06/19 10:54:06 by mcarton          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../inc/minishell.h"
-#include <limits.h>
 
-static bool	handle_sign(const char *str, int *i)
+int	overflow_positive(long long result, int digit, const char *str)
 {
-	bool	plus_sign;
-
-	plus_sign = true;
-	if (str[*i] == '+' || str[*i] == '-')
+	if (result > LLONG_MAX / 10 || (result == LLONG_MAX / 10
+			&& digit > LLONG_MAX % 10))
 	{
-		if (str[*i] == '-')
-			plus_sign = false;
-		(*i)++;
-	}
-	return (plus_sign);
-}
-
-static bool	is_numeric(char *arg)
-{
-	int	i;
-
-	i = 0;
-	if (!arg)
-		return (false);
-	if (arg[i] == '-' || arg[i] == '+')
-		i++;
-	if (arg[i] == '\0')
-		return (false);
-	while (arg[i])
-	{
-		if (!ft_isdigit(arg[i]))
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-static int	overflow_or_not(long long result, int digit, bool plus_sign,
-		const char *str)
-{
-	if (plus_sign)
-	{
-		if (result > LLONG_MAX / 10 || (result == LLONG_MAX / 10
-				&& digit > LLONG_MAX % 10))
-		{
-			write(2, "minishell: exit: ", 17);
-			write(2, str, ft_strlen(str));
-			write(2, ": numeric argument required\n", 28);
-			return (1);
-		}
-	}
-	else
-	{
-		if ((unsigned long long)result > (unsigned long long)LLONG_MAX / 10
-			|| ((unsigned long long)result == (unsigned long long)LLONG_MAX / 10
-				&& (unsigned long long)digit > ((unsigned long long)LLONG_MAX
-					% 10 + 1)))
-		{
-			write(2, "minishell: exit: ", 17);
-			write(2, str, ft_strlen(str));
-			write(2, ": numeric argument required\n", 28);
-			return (1);
-		}
+		write(2, "minishell: exit: ", 17);
+		write(2, str, ft_strlen(str));
+		write(2, ": numeric argument required\n", 28);
+		return (1);
 	}
 	return (0);
 }
 
-static int	ft_atoi_with_overflow(const char *str, int *error)
+int	overflow_negative(long long result, int digit, const char *str)
 {
-	int			i;
-	bool		plus_sign;
-	long long	result;
-
-	i = 0;
-	result = 0;
-	plus_sign = handle_sign(str, &i);
-	*error = 0;
-	while (str[i] && str[i] >= '0' && str[i] <= '9')
+	if ((unsigned long long)result > (unsigned long long)LLONG_MAX / 10
+		|| ((unsigned long long)result == (unsigned long long)LLONG_MAX / 10
+			&& (unsigned long long)digit > ((unsigned long long)LLONG_MAX % 10
+				+ 1)))
 	{
-		if (overflow_or_not(result, str[i] - '0', plus_sign, str))
-		{
-			*error = 1;
-			return (0);
-		}
-		result = result * 10 + (str[i] - '0');
-		i++;
+		write(2, "minishell: exit: ", 17);
+		write(2, str, ft_strlen(str));
+		write(2, ": numeric argument required\n", 28);
+		return (1);
 	}
-	if (plus_sign)
-		return (result);
-	return (-result);
+	return (0);
 }
 
-int	ft_exit(char **args)
+int	overflow_or_not(long long result, int digit, bool plus_sign,
+		const char *str)
 {
-	int	code;
-	int	error;
+	if (plus_sign)
+		return (overflow_positive(result, digit, str));
+	else
+		return (overflow_negative(result, digit, str));
+}
 
-	printf("exit\n");
+int	handle_exit_errors(char **args)
+{
 	if (!args || number_of_args(args) == 1)
 		return (-19);
 	if (!is_numeric(args[1]))
@@ -112,6 +67,19 @@ int	ft_exit(char **args)
 		g_exitcode = 1;
 		return (0);
 	}
+	return (42);
+}
+
+int	ft_exit(char **args)
+{
+	int	code;
+	int	error;
+	int	err;
+
+	printf("exit\n");
+	err = handle_exit_errors(args);
+	if (err != 42)
+		return (err);
 	code = ft_atoi_with_overflow(args[1], &error);
 	if (error)
 	{

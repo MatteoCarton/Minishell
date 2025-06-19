@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/17 16:25:47 by mcarton           #+#    #+#             */
+/*   Updated: 2025/06/17 16:25:48 by mcarton          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minishell.h"
 
-/* Gestion du signal SIGINT (Ctrl+C) dans le shell principal */
 static void	handle_sigint(int signal)
 {
 	(void)signal;
@@ -11,7 +22,6 @@ static void	handle_sigint(int signal)
 	g_exitcode = 130;
 }
 
-/* Gestion du signal SIGINT dans les commandes */
 static void	handle_sigint_child(int signal)
 {
 	(void)signal;
@@ -19,20 +29,16 @@ static void	handle_sigint_child(int signal)
 	exit(130);
 }
 
-/* Configuration des signaux pour le shell principal */
 void	setup_shell_signals(void)
 {
-	signal(SIGINT, handle_sigint); // Ctrl+C
-	signal(SIGQUIT, SIG_IGN);      // Ctrl+ backslash
-	signal(SIGTSTP, SIG_IGN);      // Ctrl+Z
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
 }
 
-/* Configuration des signaux pour les processus enfants (les
-commandes (exemple pendant que on est dans un sleep 100)) */
-// setup_child_signals() doit être appelé juste avant d'exécuter une commande (echo, ls, ...)
 void	setup_child_signals(void)
 {
 	signal(SIGINT, handle_sigint_child);
-	signal(SIGQUIT, SIG_DFL); // On laisse le comportement par défaut
-	signal(SIGTSTP, SIG_DFL); // On laisse le comportement par défaut
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGTSTP, SIG_DFL);
 }

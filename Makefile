@@ -33,7 +33,9 @@ SRCS = \
 	$(SRC_PATH)/exec/builtin/ft_export_utils.c \
 	$(SRC_PATH)/exec/builtin/ft_unset.c \
 	$(SRC_PATH)/exec/builtin/builtin_utils.c \
-	$(SRC_PATH)/signal/signal.c
+	$(SRC_PATH)/signal/signal.c \
+	$(SRC_PATH)/shell/shell_utils.c \
+	$(SRC_PATH)/shell/shell_exec.c
 
 OBJS = $(SRCS:$(SRC_PATH)/%.c=$(OBJ_PATH)/%.o)
 
