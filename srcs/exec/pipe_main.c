@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 00:22:11 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 00:31:17 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,28 @@ void	wait_all_children(int n_cmd)
 	int		status;
 	int		i;
 	pid_t	current_pid;
+	int		last_status;
 
 	i = 0;
+	last_status = 0;
 	while (i < n_cmd)
 	{
 		current_pid = wait(&status);
 		if (current_pid > 0)
 		{
-			if (i == n_cmd - 1)
+			if (WIFEXITED(status))
+				last_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
 			{
-				if (WIFEXITED(status))
-					g_exitcode = WEXITSTATUS(status);
-				else if (WIFSIGNALED(status))
-				{
-					if (WTERMSIG(status) == SIGPIPE)
-						g_exitcode = 0;
-					else
-						g_exitcode = 128 + WTERMSIG(status);
-				}
+				if (WTERMSIG(status) == SIGPIPE)
+					last_status = 0;
+				else
+					last_status = 128 + WTERMSIG(status);
 			}
 		}
 		i++;
 	}
+	g_exitcode = last_status;
 }
 
 int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes, int *n_cmd)
