@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:55 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 17:30:00 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 01:15:11 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,11 @@ int	handle_wait_status(int status)
 {
 	setup_shell_signals();
 	if (WIFSIGNALED(status))
+	{
 		write(1, "\n", 1);
-	if (WIFEXITED(status))
+		g_exitcode = 128 + WTERMSIG(status);
+	}
+	else if (WIFEXITED(status))
 		g_exitcode = WEXITSTATUS(status);
 	else
 		g_exitcode = 1;

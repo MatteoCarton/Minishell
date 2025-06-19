@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 00:31:17 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 00:48:56 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	wait_all_children(int n_cmd)
 	last_status = 0;
 	while (i < n_cmd)
 	{
-		current_pid = wait(&status);
+		current_pid = waitpid(-1, &status, 0);
 		if (current_pid > 0)
 		{
 			if (WIFEXITED(status))
@@ -57,24 +57,6 @@ int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes, int *n_cmd)
 	return (0);
 }
 
-static int	handle_fork_process(t_command *current, int *pipes, int i,
-		t_shell *shell)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid < 0)
-	{
-		perror("matteoshell: fork");
-		g_exitcode = 1;
-		free(pipes);
-		return (1);
-	}
-	if (pid == 0)
-		execute_child_pipe(current, pipes, i, shell);
-	return (0);
-}
-
 int	fork_children(t_command *cmd, int *pipes, t_shell *shell)
 {
 	int			i;
@@ -86,8 +68,8 @@ int	fork_children(t_command *cmd, int *pipes, t_shell *shell)
 	n_pipes = count_pipes(cmd);
 	while (current)
 	{
-		if (handle_fork_process(current, pipes, i, shell))
-			return (1);
+		if (fork() == 0)
+			execute_child_pipe(current, pipes, i, shell);
 		if (i > 0)
 			close(pipes[(i - 1) * 2]);
 		if (i < n_pipes)
