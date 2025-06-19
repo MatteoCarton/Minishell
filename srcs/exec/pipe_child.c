@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:49 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 01:22:19 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 01:26:58 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,21 @@ void	execute_child_builtin_or_cmd(t_command *cmd, t_shell *shell)
 	exit(EXIT_FAILURE);
 }
 
-void	execute_child_pipe(t_command *cmd, int *pipes, int index,
-		t_shell *shell, int n_pipes)
+void	execute_child_pipe(t_command *cmd_head, int *pipes, int index,
+		t_shell *shell)
 {
-	handle_child_redirections_and_exit(cmd, pipes, index, n_pipes);
-	execute_child_builtin_or_cmd(cmd, shell);
+	t_command	*current;
+	int			n_pipes;
+	int			i;
+
+	current = cmd_head;
+	i = 0;
+	while (i < index)
+	{
+		current = current->next;
+		i++;
+	}
+	n_pipes = count_pipes(cmd_head);
+	handle_child_redirections_and_exit(current, pipes, index, n_pipes);
+	execute_child_builtin_or_cmd(current, shell);
 }
