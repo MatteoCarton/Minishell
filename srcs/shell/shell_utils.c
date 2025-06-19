@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:13:11 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:12:51 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 23:32:30 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,15 @@ int	process_shell_line(char *line, t_shell *shell, int stdin_backup)
 	else
 		free(line);
 	return (0);
+}
+
+int	is_only_spaces(char *str)
+{
+	while (*str)
+	{
+		if (*str != ' ' && *str != '\t' && *str != '\n')
+			return (0);
+		str++;
+	}
+	return (1);
 }

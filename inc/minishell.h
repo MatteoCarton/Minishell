@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 11:06:06 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 12:14:00 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/19 23:32:22 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ typedef struct s_command
 }							t_command;
 
 /* main.c */
-int							is_only_spaces(char *str);
 char						**cpy_env(char **envp);
 
 /* shell/shell_utils.c */
@@ -85,6 +84,7 @@ int							setup_shell_stdin(int stdin_backup,
 								int *current_stdin);
 int							process_shell_line(char *line, t_shell *shell,
 								int stdin_backup);
+int							is_only_spaces(char *str);
 
 /* shell/shell_exec.c */
 int							start(char **line, t_shell *m);
