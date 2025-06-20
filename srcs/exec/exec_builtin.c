@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:32 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 17:23:36 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:25:54 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	execute_builtin(t_command *cmd, t_shell *shell)
 	if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
 		return (ft_echo(cmd->args));
 	if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
-		return (ft_pwd(), g_exitcode);
+		return (ft_pwd(shell), g_exitcode);
 	if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
 		return (ft_cd(cmd->args, shell), g_exitcode);
 	if (ft_strncmp(cmd->args[0], "env", 4) == 0)

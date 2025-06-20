@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 11:06:06 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 13:59:15 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:28:34 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,8 +292,7 @@ void						ft_cd(char **args, t_shell *shell);
 void						update_env_var(char **env, const char *name,
 								const char *value);
 char						*update_old_pwd_env(char **env);
-int							update_new_pwd_env(char **env, const char *old_pwd,
-								const char *path);
+int							update_new_pwd_env(char **env);
 
 /* exec/builtin/ft_echo.c */
 int							ft_echo(char **args);
@@ -336,7 +335,7 @@ char						*get_quoted(char *env);
 int							valid_env(char *str);
 
 /* exec/builtin/ft_pwd.c */
-void						ft_pwd(void);
+void						ft_pwd(t_shell *shell);
 
 /* exec/builtin/ft_unset.c */
 void						remove_line(char ***env, int unset);

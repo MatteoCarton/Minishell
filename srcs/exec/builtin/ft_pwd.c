@@ -6,36 +6,19 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:54:52 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 15:49:25 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:37:01 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
 
-void	ft_pwd(void)
+void	ft_pwd(t_shell *shell)
 {
-	char	*pwd_env;
-	char	buffer[PATH_MAX];
-	size_t	len_env;
-	size_t	len_buf;
-	size_t	max_len;
+	char	*pwd;
 
-	pwd_env = getenv("PWD");
-	if (pwd_env && getcwd(buffer, PATH_MAX))
-	{
-		len_env = ft_strlen(pwd_env);
-		len_buf = ft_strlen(buffer);
-		if (len_env > len_buf)
-			max_len = len_env;
-		else
-			max_len = len_buf;
-		if (ft_strncmp(pwd_env, buffer, max_len) == 0)
-			printf("%s\n", pwd_env);
-		else
-			printf("%s\n", buffer);
-	}
-	else if (getcwd(buffer, PATH_MAX))
-		printf("%s\n", buffer);
+	pwd = find_env_value(shell->env, "PWD");
+	if (pwd)
+		printf("%s\n", pwd);
 	else
-		perror("matteoshell: pwd (getcwd)");
+		perror("matteoshell: pwd");
 }

@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:50:44 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:57:35 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:30:32 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,28 +59,16 @@ char	*update_old_pwd_env(char **env)
 	return (old_pwd);
 }
 
-int	update_new_pwd_env(char **env, const char *old_pwd, const char *path)
+int	update_new_pwd_env(char **env)
 {
-	char	*new_pwd;
-	size_t	total_len;
+	char	buffer[PATH_MAX];
 
-	if (path[0] == '/')
-		new_pwd = ft_strdup(path);
-	else if (old_pwd)
-	{
-		total_len = ft_strlen(old_pwd) + 1 + ft_strlen(path) + 1;
-		new_pwd = malloc(total_len);
-		if (!new_pwd)
-			return (1);
-		ft_strlcpy(new_pwd, old_pwd, total_len);
-		ft_strlcat(new_pwd, "/", total_len);
-		ft_strlcat(new_pwd, path, total_len);
-	}
+	if (getcwd(buffer, PATH_MAX))
+		update_env_var(env, "PWD", buffer);
 	else
-		new_pwd = ft_strdup(path);
-	if (!new_pwd)
+	{
+		perror("matteoshell: cd (getcwd)");
 		return (1);
-	update_env_var(env, "PWD", new_pwd);
-	free(new_pwd);
+	}
 	return (0);
 }

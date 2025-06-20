@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:50:32 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 17:25:59 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:29:05 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,13 @@
 
 void	change_directory(char *arg1, t_shell *shell)
 {
-	char	*old_pwd;
-
-	old_pwd = update_old_pwd_env(shell->env);
 	if (chdir(arg1) == -1)
 	{
 		perror("matteoshell: cd");
 		g_exitcode = 1;
 		return ;
 	}
-	if (update_new_pwd_env(shell->env, old_pwd, arg1) == 1)
+	if (update_new_pwd_env(shell->env) == 1)
 	{
 		g_exitcode = 1;
 		return ;
