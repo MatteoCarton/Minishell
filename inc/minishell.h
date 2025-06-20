@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 11:06:06 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 01:30:23 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 02:01:20 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,15 +246,17 @@ void						execute_child_builtin_or_cmd(t_command *cmd,
 								t_shell *shell);
 void						execute_child_pipe(t_command *cmd, int *pipes,
 								int index, t_shell *shell);
+void						parent_close_fds(int *pipes, int i, int n_pipes);
+void						parent_cleanup(int *pipes, int n_pipes, int n_cmd,
+								pid_t *pids);
+
 /* exec/pipe_utils.c*/
 int							count_pipes(t_command *cmd);
 void						setup_pipe_redirections(int *pipes, int index,
 								int n_pipes);
 int							alloc_pipe_array(int **pipes, int n_pipes);
 int							create_pipes(int *pipes, int n_pipes);
-
-int							init_pipe_data(t_command *cmd, int **pipes,
-								int *n_pipes, int *n_cmd);
+int							wait_remaining_children(int n_cmd);
 
 /* exec/redirections_out.c */
 int							open_outfile(const char *output_file,
