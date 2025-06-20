@@ -6,11 +6,22 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:13:11 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 02:34:28 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:54:43 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+static int	is_only_spaces(char *str)
+{
+	while (*str)
+	{
+		if (*str != ' ' && *str != '\t' && *str != '\n')
+			return (0);
+		str++;
+	}
+	return (1);
+}
 
 void	cleanup_shell_resources(t_shell *shell, int stdin_backup)
 {
@@ -48,15 +59,4 @@ int	process_shell_line(char *line, t_shell *shell, int stdin_backup)
 		free(line);
 	}
 	return (0);
-}
-
-int	is_only_spaces(char *str)
-{
-	while (*str)
-	{
-		if (*str != ' ' && *str != '\t' && *str != '\n')
-			return (0);
-		str++;
-	}
-	return (1);
 }

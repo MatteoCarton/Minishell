@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 17:07:27 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 15:03:14 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:02:17 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*find_env_value(char **env, char *var)
 	return (NULL);
 }
 
-char	*get_var_name(char *str)
+static char	*get_var_name(char *str)
 {
 	int		i;
 	int		len;
@@ -58,7 +58,7 @@ char	*get_var_name(char *str)
 	return (name);
 }
 
-char	*handle_env_var(char **str, t_shell g_env, int *i)
+static char	*handle_env_var(char **str, t_shell g_env, int *i)
 {
 	char	*var_name;
 	char	*env_value;
@@ -80,7 +80,7 @@ char	*handle_env_var(char **str, t_shell g_env, int *i)
 	return (to_add);
 }
 
-char	*get_replacement_value(char **str, t_shell g_env, int *i)
+static char	*get_replacement_value(char **str, t_shell g_env, int *i)
 {
 	char	*to_add;
 

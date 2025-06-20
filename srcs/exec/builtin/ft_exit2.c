@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:52:42 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:00:05 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:24:41 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
 
-bool	handle_sign(const char *str, int *i)
+static bool	handle_sign(const char *str, int *i)
 {
 	bool	plus_sign;
 

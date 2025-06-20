@@ -6,16 +6,11 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 17:27:38 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 13:56:12 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:01:01 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-int	is_valid_word(char c)
-{
-	return (ft_isalnum(c) || c == '"' || c == '\'' || ft_strchr(EXTRA_CHAR, c));
-}
 
 void	process_word_quotes(char *str, char *buff, int *i, int *j)
 {
@@ -34,7 +29,7 @@ void	process_word_quotes(char *str, char *buff, int *i, int *j)
 		buff[(*j)++] = str[(*i)++];
 }
 
-void	check_token(char *line, t_token **head, t_token **actual, int *i)
+static void	check_token(char *line, t_token **head, t_token **actual, int *i)
 {
 	while (line[*i])
 	{

@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:41:09 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 17:25:23 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:19:37 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	write_heredoc_lines(int write_fd, const char *delimiter,
+static int	write_heredoc_lines(int write_fd, const char *delimiter,
 		size_t delimiter_length)
 {
 	char	*line;
@@ -51,7 +51,7 @@ int	handle_heredoc(const char *delimiter)
 	return (result_fd);
 }
 
-int	try_open_infile(t_redirection *redir, int *fd)
+static int	try_open_infile(t_redirection *redir, int *fd)
 {
 	*fd = open(redir->filename, O_RDONLY);
 	if (*fd < 0)
@@ -66,7 +66,7 @@ int	try_open_infile(t_redirection *redir, int *fd)
 	return (1);
 }
 
-int	try_dup2_infile(int fd)
+static int	try_dup2_infile(int fd)
 {
 	if (dup2(fd, STDIN_FILENO) < 0)
 	{

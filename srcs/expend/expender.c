@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 17:02:43 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:11:44 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:05:24 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	joignable(char **str, char **new_str, t_shell g_env, int *i)
+static int	joignable(char **str, char **new_str, t_shell g_env, int *i)
 {
 	if ((*str)[*i] != '$')
 		return (0);
@@ -25,7 +25,7 @@ int	joignable(char **str, char **new_str, t_shell g_env, int *i)
 	return (0);
 }
 
-int	process_char(char **str, char **new_str, t_shell g_env, int *i)
+static int	process_char(char **str, char **new_str, t_shell g_env, int *i)
 {
 	char	*tmp;
 
@@ -45,7 +45,7 @@ int	process_char(char **str, char **new_str, t_shell g_env, int *i)
 	return (1);
 }
 
-int	add_single_quote_char(char **str, char **new_str, int *i)
+static int	add_single_quote_char(char **str, char **new_str, int *i)
 {
 	char	*tmp;
 
@@ -62,7 +62,7 @@ int	add_single_quote_char(char **str, char **new_str, int *i)
 	return (1);
 }
 
-int	expand_dollar_loop(char **str, char **new_str, t_shell g_env)
+static int	expand_dollar_loop(char **str, char **new_str, t_shell g_env)
 {
 	int	i;
 	int	in_single;

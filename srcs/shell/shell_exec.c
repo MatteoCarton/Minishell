@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:13:08 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 23:46:27 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:53:35 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	handle_command(t_command *cmd, t_shell *m, t_token *lexed)
+static int	handle_command(t_command *cmd, t_shell *m, t_token *lexed)
 {
 	int	result;
 
@@ -27,7 +27,7 @@ int	handle_command(t_command *cmd, t_shell *m, t_token *lexed)
 	return (1);
 }
 
-int	handle_tokens(t_token *lexed, t_shell *m)
+static int	handle_tokens(t_token *lexed, t_shell *m)
 {
 	t_command	*cmd;
 	int			result;

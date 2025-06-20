@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:49 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 02:00:44 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:13:47 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	handle_child_redirections_and_exit(t_command *cmd, int *pipes,
+static void	handle_child_redirections_and_exit(t_command *cmd, int *pipes,
 		int index, int n_pipes)
 {
 	setup_pipe_redirections(pipes, index, n_pipes);
@@ -26,7 +26,7 @@ void	handle_child_redirections_and_exit(t_command *cmd, int *pipes,
 		exit(0);
 }
 
-void	execute_child_builtin_or_cmd(t_command *cmd, t_shell *shell)
+static void	execute_child_builtin_or_cmd(t_command *cmd, t_shell *shell)
 {
 	char	*path;
 

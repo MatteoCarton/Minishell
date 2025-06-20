@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:35 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 17:23:51 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:08:50 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	exec_child_process(char *path, t_command *cmd, t_shell *shell)
+static void	exec_child_process(char *path, t_command *cmd, t_shell *shell)
 {
 	execve(path, cmd->args, shell->env);
 	perror("matteoshell");
@@ -29,7 +29,7 @@ int	setup_external_exec(t_command *cmd, t_shell *shell, char **path)
 	return (1);
 }
 
-int	handle_external_child(char *path, t_command *cmd, t_shell *shell)
+static int	handle_external_child(char *path, t_command *cmd, t_shell *shell)
 {
 	setup_child_signals();
 	exec_redirections(cmd);
@@ -37,7 +37,7 @@ int	handle_external_child(char *path, t_command *cmd, t_shell *shell)
 	return (0);
 }
 
-int	create_child_exec(char *path, t_command *cmd, t_shell *shell,
+static int	create_child_exec(char *path, t_command *cmd, t_shell *shell,
 		int stdout_backup)
 {
 	pid_t	pid;

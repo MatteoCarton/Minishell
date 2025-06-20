@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:20:42 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:20:43 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:09:08 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	free_tab(char **tab)
+static void	free_tab(char **tab)
 {
 	int	i;
 

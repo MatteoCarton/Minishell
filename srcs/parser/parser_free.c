@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:29:24 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 02:13:41 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:55:11 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	free_redirections(t_redirection *redir)
+static void	free_redirections(t_redirection *redir)
 {
 	t_redirection	*tmp;
 

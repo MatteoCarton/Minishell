@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:54:38 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:58:20 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:26:37 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
 
-char	*get_key(char *str)
+static char	*get_key(char *str)
 {
 	char	*equal;
 	char	*key;
@@ -53,7 +53,7 @@ int	check_line(char ***env, char *str)
 		return (0);
 }
 
-int	equal_pos(char *str)
+static int	equal_pos(char *str)
 {
 	int	i;
 

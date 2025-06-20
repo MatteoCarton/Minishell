@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:53:13 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 13:56:01 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:58:22 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	pipe_token(char *line, t_token **head, t_token **actual, int *i)
 	}
 }
 
-t_token	*handle_redirect_in(char *str, int *i)
+static t_token	*handle_redirect_in(char *str, int *i)
 {
 	if (str[*i] == '<')
 	{
@@ -42,7 +42,7 @@ t_token	*handle_redirect_in(char *str, int *i)
 	return (NULL);
 }
 
-t_token	*handle_redirect_out(char *str, int *i)
+static t_token	*handle_redirect_out(char *str, int *i)
 {
 	if (str[*i] == '>')
 	{

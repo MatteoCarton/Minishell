@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:53:22 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 13:55:42 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:57:26 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	free_env(char **env)
 	free(env);
 }
 
-void	clean_token(t_token *token)
+static void	clean_token(t_token *token)
 {
 	if (!token)
 		return ;

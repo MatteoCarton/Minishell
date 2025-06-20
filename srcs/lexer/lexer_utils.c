@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:53:26 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 13:56:07 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:59:24 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,21 +86,4 @@ void	process_quotes(char *str, char *buff, int *i, int *j)
 		return ;
 	else
 		buff[(*j)++] = str[(*i)++];
-}
-
-void	other_token(char *str, t_token **head, t_token **actual, int *i)
-{
-	t_token		*new;
-	int			begun;
-	char		*word;
-
-	begun = *i;
-	while (str[*i] && is_valid_word(str[*i]))
-		(*i)++;
-	word = ft_substr(str, begun, *i - begun);
-	if (!word)
-		return ;
-	new = create_token(WORD, word);
-	add_token(head, actual, new);
-	free(word);
 }

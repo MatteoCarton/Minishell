@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:53:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 14:57:48 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 19:07:07 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
 
-int	overflow_positive(long long result, int digit, const char *str)
+static int	overflow_positive(long long result, int digit, const char *str)
 {
 	if (result > LLONG_MAX / 10 || (result == LLONG_MAX / 10
 			&& digit > LLONG_MAX % 10))
@@ -25,7 +25,7 @@ int	overflow_positive(long long result, int digit, const char *str)
 	return (0);
 }
 
-int	overflow_negative(long long result, int digit, const char *str)
+static int	overflow_negative(long long result, int digit, const char *str)
 {
 	if ((unsigned long long)result > (unsigned long long)LLONG_MAX / 10
 		|| ((unsigned long long)result == (unsigned long long)LLONG_MAX / 10
@@ -49,7 +49,7 @@ int	overflow_or_not(long long result, int digit, bool plus_sign,
 		return (overflow_negative(result, digit, str));
 }
 
-int	handle_exit_errors(char **args)
+static int	handle_exit_errors(char **args)
 {
 	if (!args || number_of_args(args) == 1)
 		return (-19);

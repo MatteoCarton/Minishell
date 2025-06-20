@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:44 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 01:57:52 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:23:07 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,20 +74,10 @@ int	create_pipes(int *pipes, int n_pipes)
 	return (0);
 }
 
-int	wait_remaining_children(int n_cmd)
+void	update_last_status(int status, int *last_status)
 {
-	int	status;
-	int	i;
-	int	was_signaled;
-
-	i = 0;
-	was_signaled = 0;
-	while (i < n_cmd - 1)
-	{
-		wait(&status);
-		if (WIFSIGNALED(status))
-			was_signaled = 1;
-		i++;
-	}
-	return (was_signaled);
+	if (WIFEXITED(status))
+		*last_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		*last_status = 128 + WTERMSIG(status);
 }

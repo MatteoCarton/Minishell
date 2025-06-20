@@ -6,18 +6,11 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:55 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 01:15:11 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:15:39 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-int	has_pipe(t_command *cmd)
-{
-	if (!cmd)
-		return (0);
-	return (cmd && cmd->next != NULL);
-}
 
 char	*handle_command_not_found(char *cmd)
 {

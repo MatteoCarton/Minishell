@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:32 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 16:25:54 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:22:53 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	execute_builtin(t_command *cmd, t_shell *shell)
 	return (0);
 }
 
-int	create_builtin_process(t_command *cmd, t_shell *shell)
+static int	create_builtin_process(t_command *cmd, t_shell *shell)
 {
 	pid_t	pid;
 
@@ -72,6 +72,24 @@ int	create_builtin_process(t_command *cmd, t_shell *shell)
 		exit(g_exitcode);
 	}
 	return (pid);
+}
+
+static int	prepare_builtin_execution(t_command *cmd, int *stdout_backup)
+{
+	*stdout_backup = dup(STDOUT_FILENO);
+	if (*stdout_backup == -1)
+	{
+		perror("matteoshell");
+		return (0);
+	}
+	if (!exec_redirections(cmd))
+	{
+		dup2(*stdout_backup, STDOUT_FILENO);
+		close(*stdout_backup);
+		g_exitcode = 1;
+		return (0);
+	}
+	return (1);
 }
 
 int	exec_builtin_with_fork(t_command *cmd, t_shell *shell)
@@ -94,22 +112,4 @@ int	exec_builtin_with_fork(t_command *cmd, t_shell *shell)
 	dup2(stdout_backup, STDOUT_FILENO);
 	close(stdout_backup);
 	return (handle_wait_status(status));
-}
-
-int	prepare_builtin_execution(t_command *cmd, int *stdout_backup)
-{
-	*stdout_backup = dup(STDOUT_FILENO);
-	if (*stdout_backup == -1)
-	{
-		perror("matteoshell");
-		return (0);
-	}
-	if (!exec_redirections(cmd))
-	{
-		dup2(*stdout_backup, STDOUT_FILENO);
-		close(*stdout_backup);
-		g_exitcode = 1;
-		return (0);
-	}
-	return (1);
 }

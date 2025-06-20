@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:44:43 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 10:50:35 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:20:47 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,4 @@ int	number_of_args(char **args)
 	while (args[i])
 		i++;
 	return (i);
-}
-
-char	*ft_strcpy(char *dest, const char *src)
-{
-	int	i;
-
-	i = 0;
-	while (src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
 }

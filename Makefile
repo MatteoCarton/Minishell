@@ -36,7 +36,6 @@ SRCS = \
 	$(SRC_PATH)/exec/pipe_child.c \
 	$(SRC_PATH)/exec/pipe_main.c \
 	$(SRC_PATH)/exec/pipe_utils.c \
-	$(SRC_PATH)/exec/pipe_utils2.c \
 	$(SRC_PATH)/exec/redirections_apply.c \
 	$(SRC_PATH)/exec/redirections_out.c \
 	$(SRC_PATH)/exec/redirections_in.c \
@@ -46,6 +45,7 @@ SRCS = \
 	$(SRC_PATH)/exec/builtin/ft_exit.c \
 	$(SRC_PATH)/exec/builtin/ft_exit2.c \
 	$(SRC_PATH)/exec/builtin/ft_cd.c \
+	$(SRC_PATH)/exec/builtin/ft_cd_utils.c \
 	$(SRC_PATH)/exec/builtin/ft_cd2.c \
 	$(SRC_PATH)/exec/builtin/ft_export.c \
 	$(SRC_PATH)/exec/builtin/ft_export2.c \
@@ -62,7 +62,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(CYAN)Compiling: libft...$(RESET)"
-	@$(MAKE) -C ./libft --silent
+	@$(MAKE) -C ./libft bonus --silent
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBS)
 	@echo "\n$(GREEN)READY TO EXECUTE: ./minishell$(RESET)\n"
 

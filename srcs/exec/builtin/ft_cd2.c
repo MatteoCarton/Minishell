@@ -5,70 +5,106 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 10:50:44 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 16:30:32 by mcarton          ###   ########.fr       */
+/*   Created: 2025/06/21 13:00:00 by mcarton           #+#    #+#             */
+/*   Updated: 2025/06/20 18:36:38 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
 
-void	update_env_var(char **env, const char *name, const char *value)
+void	free_components(char **components)
 {
-	size_t	i;
-	size_t	len;
-	char	*new_var;
+	int	i;
 
-	len = ft_strlen(name);
 	i = 0;
-	while (env[i])
+	if (!components)
+		return ;
+	while (components[i])
 	{
-		if (ft_strncmp(env[i], name, len) == 0 && env[i][len] == '=')
-		{
-			new_var = malloc(len + 1 + ft_strlen(value) + 1);
-			if (!new_var)
-				return ;
-			ft_strlcpy(new_var, name, len + 1);
-			new_var[len] = '=';
-			ft_strlcpy(new_var + len + 1, value, ft_strlen(value) + 1);
-			free(env[i]);
-			env[i] = new_var;
-			return ;
-		}
+		free(components[i]);
 		i++;
 	}
+	free(components);
 }
 
-char	*update_old_pwd_env(char **env)
+static void	ft_lstclear_one_rev(t_list **lst, void (*del)(void*))
+{
+	t_list	*current;
+	t_list	*prev;
+
+	if (!lst || !*lst)
+		return ;
+	current = *lst;
+	if (!current->next)
+	{
+		ft_lstdelone(current, del);
+		*lst = NULL;
+		return ;
+	}
+	while (current->next)
+	{
+		prev = current;
+		current = current->next;
+	}
+	prev->next = NULL;
+	ft_lstdelone(current, del);
+}
+
+void	fill_path_list(t_list **path_list, char **components)
 {
 	int		i;
-	char	*old_pwd;
+	size_t	len;
 
-	old_pwd = NULL;
 	i = 0;
-	while (env[i])
+	while (components[i])
 	{
-		if (ft_strncmp(env[i], "PWD=", 4) == 0)
-		{
-			old_pwd = env[i] + 4;
-			break ;
-		}
+		len = ft_strlen(components[i]);
+		if (len == 2 && ft_strncmp(components[i], "..", 2) == 0)
+			ft_lstclear_one_rev(path_list, free);
+		else if (len == 1 && ft_strncmp(components[i], ".", 1) == 0)
+			;
+		else if (*components[i])
+			ft_lstadd_back(path_list, ft_lstnew(ft_strdup(components[i])));
 		i++;
 	}
-	if (old_pwd)
-		update_env_var(env, "OLDPWD", old_pwd);
-	return (old_pwd);
 }
 
-int	update_new_pwd_env(char **env)
+static size_t	calculate_path_len(t_list *lst)
 {
-	char	buffer[PATH_MAX];
+	size_t	len;
 
-	if (getcwd(buffer, PATH_MAX))
-		update_env_var(env, "PWD", buffer);
-	else
+	len = 0;
+	while (lst)
 	{
-		perror("matteoshell: cd (getcwd)");
-		return (1);
+		len += ft_strlen(lst->content);
+		if (lst->next)
+			len++;
+		lst = lst->next;
 	}
-	return (0);
+	return (len);
+}
+
+char	*ft_lst_to_path(t_list *lst)
+{
+	char	*path;
+	size_t	len;
+	t_list	*tmp;
+
+	if (!lst)
+		return (ft_strdup("/"));
+	len = calculate_path_len(lst);
+	path = malloc(sizeof(char) * (len + 2));
+	if (!path)
+		return (NULL);
+	tmp = lst;
+	path[0] = '/';
+	path[1] = '\0';
+	while (tmp)
+	{
+		ft_strlcat(path, tmp->content, len + 2);
+		if (tmp->next)
+			ft_strlcat(path, "/", len + 2);
+		tmp = tmp->next;
+	}
+	return (path);
 }

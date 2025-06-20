@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:51:37 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 23:30:23 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:11:13 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_file_error(const char *path, const char *error_msg)
 	write(2, error_msg, ft_strlen(error_msg));
 }
 
-int	check_file_exists(const char *path)
+static int	check_file_exists(const char *path)
 {
 	struct stat	st;
 
@@ -32,7 +32,7 @@ int	check_file_exists(const char *path)
 	return (1);
 }
 
-int	check_file_permissions(const char *path)
+static int	check_file_permissions(const char *path)
 {
 	if (!check_file_exists(path))
 		return (0);
@@ -47,7 +47,7 @@ int	check_file_permissions(const char *path)
 	return (1);
 }
 
-char	*handle_absolute_path(char *cmd)
+static char	*handle_absolute_path(char *cmd)
 {
 	char	*path;
 

@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:55:09 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:00:44 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:27:34 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
 
-void	remove_line(char ***env, int unset)
+static void	remove_line(char ***env, int unset)
 {
 	int		i;
 	int		j;
@@ -41,7 +41,7 @@ void	remove_line(char ***env, int unset)
 	*env = new;
 }
 
-int	get_line_unset(char **env, char *unset)
+static int	get_line_unset(char **env, char *unset)
 {
 	int	i;
 	int	j;

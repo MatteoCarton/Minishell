@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:41:08 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 17:25:38 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:20:09 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	open_outfile(const char *output_file, int append_flag)
+static int	open_outfile(const char *output_file, int append_flag)
 {
 	int	fd;
 
@@ -23,7 +23,7 @@ int	open_outfile(const char *output_file, int append_flag)
 	return (fd);
 }
 
-int	try_open_outfile(t_redirection *redir, int *fd)
+static int	try_open_outfile(t_redirection *redir, int *fd)
 {
 	int	append_flag;
 

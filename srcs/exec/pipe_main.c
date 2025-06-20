@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 02:43:26 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:22:41 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ static void	wait_loop(int n_cmd, pid_t *pids, int *last_status, int *signaled)
 
 void	wait_all_children(int n_cmd, pid_t *pids)
 {
-	int		last_status;
-	int		signaled;
+	int	last_status;
+	int	signaled;
 
 	last_status = 0;
 	signaled = 0;
@@ -48,7 +48,8 @@ void	wait_all_children(int n_cmd, pid_t *pids)
 	free(pids);
 }
 
-int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes, int *n_cmd)
+static int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes,
+		int *n_cmd)
 {
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
@@ -64,7 +65,8 @@ int	init_pipe_data(t_command *cmd, int **pipes, int *n_pipes, int *n_cmd)
 	return (0);
 }
 
-int	fork_children(t_command *cmd, int *pipes, t_shell *shell, pid_t *pids)
+static int	fork_children(t_command *cmd, int *pipes, t_shell *shell,
+		pid_t *pids)
 {
 	int			i;
 	t_command	*current;

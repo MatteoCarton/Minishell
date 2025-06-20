@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 14:56:20 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:23:00 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ int	prepare_command_execution(t_command *cmd, t_shell *shell,
 	return (0);
 }
 
-int	handle_builtin_no_redir(t_command *cmd, t_shell *shell, int stdout_backup)
+static int	handle_builtin_no_redir(t_command *cmd, t_shell *shell,
+		int stdout_backup)
 {
 	int	result;
 
@@ -69,7 +70,7 @@ int	handle_builtin_no_redir(t_command *cmd, t_shell *shell, int stdout_backup)
 	return (result);
 }
 
-int	handle_simple_command(t_command *cmd, t_shell *shell)
+static int	handle_simple_command(t_command *cmd, t_shell *shell)
 {
 	int	has_output_redirection;
 	int	stdout_backup;

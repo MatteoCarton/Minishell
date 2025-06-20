@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:29:27 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:09:25 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:56:00 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_command	*init_command(void)
 	return (cmd);
 }
 
-void	arg_while(t_command **cmd, char **arg, char ***new_args)
+static void	arg_while(t_command **cmd, char **arg, char ***new_args)
 {
 	int	i;
 

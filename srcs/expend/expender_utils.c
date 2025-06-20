@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 17:03:35 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 15:03:01 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:04:15 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,50 +75,4 @@ char	*join_char(char *s, char c)
 	new_str[i] = c;
 	new_str[i + 1] = '\0';
 	return (new_str);
-}
-
-int	len(long nbr)
-{
-	int	i;
-
-	i = 0;
-	if (nbr < 0)
-		i++;
-	if (nbr == 0)
-		i++;
-	while (nbr != 0)
-	{
-		nbr = nbr / 10;
-		i++;
-	}
-	return (i);
-}
-
-char	*ft_itoa(int n)
-{
-	int		l;
-	int		i;
-	long	nbr;
-	char	*result;
-
-	nbr = n;
-	l = len(nbr);
-	i = l - 1;
-	result = calloc(l + 1, sizeof(char));
-	if (!result)
-		return (NULL);
-	if (nbr == 0)
-		result[0] = '0';
-	if (nbr < 0)
-	{
-		result[0] = '-';
-		nbr = -nbr;
-	}
-	while (nbr > 0)
-	{
-		result[i] = (nbr % 10) + '0';
-		nbr = nbr / 10;
-		i--;
-	}
-	return (result);
 }

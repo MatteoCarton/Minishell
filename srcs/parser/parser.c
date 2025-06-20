@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:33:21 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 02:16:31 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:57:02 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	handle_redirection(t_command *cmd, t_token *current)
+static int	handle_redirection(t_command *cmd, t_token *current)
 {
 	t_token	*next;
 
@@ -56,7 +56,7 @@ static int	parse_redirection(t_command *cmd, t_command *first_cmd,
 	return (0);
 }
 
-int	parse_while(t_command **cmd, t_command **first_cmd,
+static int	parse_while(t_command **cmd, t_command **first_cmd,
 		t_token **current)
 {
 	while (*current)

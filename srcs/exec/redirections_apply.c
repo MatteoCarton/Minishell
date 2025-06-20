@@ -6,14 +6,14 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:39:01 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 17:24:43 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:18:47 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	find_last_redirs(t_redirection *redirection, t_redirection **last_out,
-		t_redirection **last_in)
+static void	find_last_redirs(t_redirection *redirection,
+		t_redirection **last_out, t_redirection **last_in)
 {
 	t_redirection	*tmp;
 
@@ -30,7 +30,32 @@ void	find_last_redirs(t_redirection *redirection, t_redirection **last_out,
 	}
 }
 
-int	apply_redirections(t_redirection *redirection, t_redirection *last_in)
+static int	handle_redir_heredoc(t_redirection *redir)
+{
+	int	fd;
+
+	fd = redir->heredoc_fd;
+	if (fd < 0)
+	{
+		write(2, "matteoshell: heredoc: ", 22);
+		perror("");
+		g_exitcode = 1;
+		return (0);
+	}
+	if (dup2(fd, STDIN_FILENO) < 0)
+	{
+		write(2, "matteoshell: ", 13);
+		perror("dup2");
+		close(fd);
+		g_exitcode = 1;
+		return (0);
+	}
+	close(fd);
+	return (1);
+}
+
+static int	apply_redirections(t_redirection *redirection,
+		t_redirection *last_in)
 {
 	t_redirection	*tmp;
 
@@ -64,28 +89,4 @@ int	exec_redirections(t_command *cmd)
 
 	find_last_redirs(cmd->redirection, &last_out, &last_in);
 	return (apply_redirections(cmd->redirection, last_in));
-}
-
-int	handle_redir_heredoc(t_redirection *redir)
-{
-	int	fd;
-
-	fd = redir->heredoc_fd;
-	if (fd < 0)
-	{
-		write(2, "matteoshell: heredoc: ", 22);
-		perror("");
-		g_exitcode = 1;
-		return (0);
-	}
-	if (dup2(fd, STDIN_FILENO) < 0)
-	{
-		write(2, "matteoshell: ", 13);
-		perror("dup2");
-		close(fd);
-		g_exitcode = 1;
-		return (0);
-	}
-	close(fd);
-	return (1);
 }

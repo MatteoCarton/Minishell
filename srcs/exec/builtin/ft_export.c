@@ -6,13 +6,13 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:54:49 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 17:26:49 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:25:57 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
 
-void	add_env_var(char ***env, char *str)
+static void	add_env_var(char ***env, char *str)
 {
 	int		i;
 	int		j;
@@ -38,7 +38,7 @@ void	add_env_var(char ***env, char *str)
 	*env = new;
 }
 
-void	fill_export_output(char ***env, char **output, int i)
+static void	fill_export_output(char ***env, char **output, int i)
 {
 	int		j;
 	char	*quoted;
@@ -59,7 +59,7 @@ void	fill_export_output(char ***env, char **output, int i)
 	output[j] = NULL;
 }
 
-void	all_export(char ***env)
+static void	all_export(char ***env)
 {
 	int		i;
 	char	**output;
@@ -75,7 +75,7 @@ void	all_export(char ***env)
 	free(output);
 }
 
-void	export_with_args(char **arg, char ***env, int *exit)
+static void	export_with_args(char **arg, char ***env, int *exit)
 {
 	int	check;
 	int	i;
