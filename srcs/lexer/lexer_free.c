@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:53:22 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/17 16:58:40 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 13:55:42 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,4 @@ void	free_token(t_token **head)
 		current = next;
 	}
 	*head = NULL;
-}
-
-/*pour printf les token test*/
-void	printoken(t_token *head)
-{
-	t_token		*actual;
-
-	actual = head;
-	while (actual)
-	{
-		printf("type: %d, value: %s\n", actual->type, actual->str);
-		actual = actual->next;
-	}
 }

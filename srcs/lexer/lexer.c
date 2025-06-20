@@ -6,13 +6,12 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 17:27:38 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 17:27:58 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 13:56:12 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-/*dans la fonction handle quotes juste gerer les char*/
 int	is_valid_word(char c)
 {
 	return (ft_isalnum(c) || c == '"' || c == '\'' || ft_strchr(EXTRA_CHAR, c));
@@ -50,9 +49,6 @@ void	check_token(char *line, t_token **head, t_token **actual, int *i)
 	}
 }
 
-/*on cree token malloc size de la struct puis on dup str ,
-	def le type et set le next a NUll
-puis on return*/
 t_token	*create_token(t_token_type type, char *str)
 {
 	t_token	*new;

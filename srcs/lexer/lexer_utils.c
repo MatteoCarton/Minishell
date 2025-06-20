@@ -6,14 +6,12 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:53:26 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:10:57 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 13:56:07 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-/*add a la liste, si la liste est vide on set le premier
-a la tete ensuite on dit on add next ect*/
 void	add_token(t_token **head, t_token **actual, t_token *new)
 {
 	if (*head == NULL)

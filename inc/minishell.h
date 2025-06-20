@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 11:06:06 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 02:44:24 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 13:55:49 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,6 @@ int							check_quotes(char *line);
 void						free_env(char **env);
 void						clean_token(t_token *token);
 void						free_token(t_token **head);
-void						printoken(t_token *head);
 
 /* expend/expender.c */
 int							joignable(char **str, char **new_str, t_shell g_env,
