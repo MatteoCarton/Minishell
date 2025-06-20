@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:13:11 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 23:44:53 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 02:34:28 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,10 @@ int	process_shell_line(char *line, t_shell *shell, int stdin_backup)
 		free(line);
 	}
 	else
+	{
+		g_exitcode = 0;
 		free(line);
+	}
 	return (0);
 }
 

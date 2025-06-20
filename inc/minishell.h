@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 11:06:06 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 02:14:01 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 02:44:24 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,6 +256,9 @@ void						setup_pipe_redirections(int *pipes, int index,
 int							alloc_pipe_array(int **pipes, int n_pipes);
 int							create_pipes(int *pipes, int n_pipes);
 int							wait_remaining_children(int n_cmd);
+
+/* exec/pipe_utils2.c*/
+void						update_last_status(int status, int *last_status);
 
 /* exec/redirections_out.c */
 int							open_outfile(const char *output_file,

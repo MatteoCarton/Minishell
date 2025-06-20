@@ -6,44 +6,45 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:33:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 02:00:55 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 02:43:26 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static int	wait_last_child(int n_cmd, pid_t *pids, int *last_status)
+static void	wait_loop(int n_cmd, pid_t *pids, int *last_status, int *signaled)
 {
-	int	status;
-	int	was_signaled;
+	int		i;
+	int		status;
+	pid_t	pid;
 
-	was_signaled = 0;
-	*last_status = 0;
-	if (n_cmd > 0)
+	i = 0;
+	while (i < n_cmd)
 	{
-		waitpid(pids[n_cmd - 1], &status, 0);
-		if (WIFEXITED(status))
-			*last_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-		{
-			was_signaled = 1;
-			*last_status = 128 + WTERMSIG(status);
-		}
+		pid = wait(&status);
+		if (pid == pids[n_cmd - 1])
+			update_last_status(status, last_status);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+			*signaled = 1;
+		i++;
 	}
-	return (was_signaled);
 }
 
 void	wait_all_children(int n_cmd, pid_t *pids)
 {
-	int	last_status;
-	int	signaled_last;
-	int	signaled_remaining;
+	int		last_status;
+	int		signaled;
 
-	signaled_last = wait_last_child(n_cmd, pids, &last_status);
-	signaled_remaining = wait_remaining_children(n_cmd);
-	if (signaled_last || signaled_remaining)
+	last_status = 0;
+	signaled = 0;
+	wait_loop(n_cmd, pids, &last_status, &signaled);
+	if (signaled)
+	{
 		write(1, "\n", 1);
-	g_exitcode = last_status;
+		g_exitcode = 130;
+	}
+	else
+		g_exitcode = last_status;
 	free(pids);
 }
 

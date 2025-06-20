@@ -36,6 +36,7 @@ SRCS = \
 	$(SRC_PATH)/exec/pipe_child.c \
 	$(SRC_PATH)/exec/pipe_main.c \
 	$(SRC_PATH)/exec/pipe_utils.c \
+	$(SRC_PATH)/exec/pipe_utils2.c \
 	$(SRC_PATH)/exec/redirections_apply.c \
 	$(SRC_PATH)/exec/redirections_out.c \
 	$(SRC_PATH)/exec/redirections_in.c \
