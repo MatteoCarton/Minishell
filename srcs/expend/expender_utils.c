@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 17:03:35 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 11:11:55 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 15:03:01 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*join_str(char *s1, char *s2)
 
 	if (!s1 || !s2)
 		return (NULL);
-	tot = strlen(s1) + strlen(s2) + 1;
+	tot = ft_strlen(s1) + ft_strlen(s2) + 1;
 	ct = malloc(sizeof(char) * tot);
 	if (!ct)
 		return (NULL);
@@ -66,12 +66,12 @@ char	*join_char(char *s, char c)
 
 	i = 0;
 	if (s)
-		i = strlen(s);
+		i = ft_strlen(s);
 	new_str = malloc(i + 2);
 	if (!new_str)
 		return (NULL);
 	if (s)
-		strlcpy(new_str, s, i + 1);
+		ft_strlcpy(new_str, s, i + 1);
 	new_str[i] = c;
 	new_str[i + 1] = '\0';
 	return (new_str);

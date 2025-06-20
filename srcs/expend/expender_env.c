@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 17:07:27 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/17 17:18:11 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 15:03:14 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*get_var_name(char *str)
 	j = 0;
 	if (!str || str[0] != '$')
 		return (NULL);
-	while (str[i + len] && (isalnum(str[i + len]) || str[i + len] == '_'))
+	while (str[i + len] && (ft_isalnum(str[i + len]) || str[i + len] == '_'))
 		len++;
 	if (len == 0)
 		return (NULL);
