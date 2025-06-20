@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:54:52 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 15:47:58 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 15:49:25 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ void	ft_pwd(void)
 	{
 		len_env = ft_strlen(pwd_env);
 		len_buf = ft_strlen(buffer);
-		max_len = len_env > len_buf ? len_env : len_buf;
+		if (len_env > len_buf)
+			max_len = len_env;
+		else
+			max_len = len_buf;
 		if (ft_strncmp(pwd_env, buffer, max_len) == 0)
 			printf("%s\n", pwd_env);
 		else
