@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:21:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/19 17:23:57 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 14:56:20 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	prepare_command_execution(t_command *cmd, t_shell *shell,
 
 int	handle_builtin_no_redir(t_command *cmd, t_shell *shell, int stdout_backup)
 {
-	int	ret;
+	int	result;
 
 	stdout_backup = dup(STDOUT_FILENO);
 	if (stdout_backup == -1)
@@ -61,10 +61,12 @@ int	handle_builtin_no_redir(t_command *cmd, t_shell *shell, int stdout_backup)
 		g_exitcode = 1;
 		return (1);
 	}
-	ret = execute_builtin(cmd, shell);
+	result = execute_builtin(cmd, shell);
 	dup2(stdout_backup, STDOUT_FILENO);
 	close(stdout_backup);
-	return (ret);
+	if (result != -19)
+		g_exitcode = result;
+	return (result);
 }
 
 int	handle_simple_command(t_command *cmd, t_shell *shell)

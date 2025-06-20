@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 11:06:06 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 13:55:49 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 13:59:15 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,6 @@ typedef struct s_command
 	t_redirection			*redirection;
 	struct s_command		*next;
 }							t_command;
-
-/* main.c */
-char						**cpy_env(char **envp);
 
 /* shell/shell_utils.c */
 void						cleanup_shell_resources(t_shell *shell,

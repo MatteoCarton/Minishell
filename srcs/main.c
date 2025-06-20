@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:12:50 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 13:54:20 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 13:59:09 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int			g_exitcode = 0;
 
-char	**cpy_env(char **envp)
+static char	**cpy_env(char **envp)
 {
 	int		i;
 	char	**env;

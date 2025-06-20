@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 10:53:46 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 01:34:22 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 14:57:48 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	handle_exit_errors(char **args)
 	{
 		write(2, "matteoshell: exit: too many arguments\n", 38);
 		g_exitcode = 1;
-		return (0);
+		return (1);
 	}
 	return (42);
 }
