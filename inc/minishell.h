@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 11:06:06 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/20 02:01:20 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 02:14:01 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,6 @@ void						setup_shell_signals(void);
 void						setup_child_signals(void);
 
 /* parser/parser.c */
-void						handle_argument(t_command *cmd, t_token *current);
-t_command					*handle_pipe(t_command *cmd);
 int							handle_redirection(t_command *cmd,
 								t_token *current);
 int							parse_while(t_command **cmd, t_command **first_cmd,
@@ -116,6 +114,7 @@ void						add_argument(t_command *cmd, char *arg);
 /* parser/parser_free.c */
 void						free_redirections(t_redirection *redir);
 void						free_command(t_command *cmd);
+t_command					*handle_pipe(t_command *cmd);
 
 /* lexer/lexer.c */
 t_token						*get_token(char *line);

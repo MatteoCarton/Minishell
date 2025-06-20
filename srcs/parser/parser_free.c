@@ -6,7 +6,7 @@
 /*   By: mcarton <mcarton@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:29:24 by mcarton           #+#    #+#             */
-/*   Updated: 2025/06/17 16:39:43 by mcarton          ###   ########.fr       */
+/*   Updated: 2025/06/20 02:13:41 by mcarton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,13 @@ void	free_command(t_command *cmd)
 	if (cmd->next)
 		free_command(cmd->next);
 	free(cmd);
+}
+
+t_command	*handle_pipe(t_command *cmd)
+{
+	cmd->next = init_command();
+	if (!cmd->next)
+		return (NULL);
+	cmd = cmd->next;
+	return (cmd);
 }
